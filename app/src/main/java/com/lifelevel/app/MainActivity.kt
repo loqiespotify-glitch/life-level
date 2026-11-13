@@ -20,7 +20,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.permission.PermissionController
+import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.time.TimeRangeFilter
@@ -38,12 +38,12 @@ class MainActivity : ComponentActivity() {
     private val stepPermissions = setOf(HealthPermission.getReadPermission(StepsRecord::class))
     private val healthPermissionLauncher = registerForActivityResult(
         PermissionController.createRequestPermissionResultContract()
-    ) { granted ->
+    ) { granted: Set<String> ->
         if (granted.containsAll(stepPermissions)) readTodaySteps() else js("healthConnectResult(false, 'Доступ к шагам не разрешён')")
     }
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { granted -> js("nativeNotificationPermission($granted)") }
+    ) { granted: Set<String> -> js("nativeNotificationPermission($granted)") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

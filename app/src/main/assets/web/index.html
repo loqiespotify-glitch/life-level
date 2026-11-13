@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1219">
+<meta name="description" content="LIFE LEVEL — прокачивай реальную жизнь через ежедневные миссии">
+<link rel="manifest" href="manifest.webmanifest">
+<title>LIFE LEVEL</title>
+<style>
+:root{--bg:#0d1219;--panel:#151e29;--panel2:#1b2734;--line:#293747;--text:#f3f6fa;--muted:#91a0b1;--green:#62e6ad;--gold:#f4c66a;--blue:#83b9ff;--red:#ff7d83}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#1d3440 0,transparent 42%),var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer}.app{max-width:760px;margin:auto;padding:22px 16px 100px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.brand{font-size:13px;letter-spacing:3px;font-weight:900;color:var(--green)}.sub{color:var(--muted);font-size:12px;margin-top:4px}.pill{border:1px solid var(--line);border-radius:30px;padding:8px 12px;color:var(--gold);font-size:12px}
+.hero{background:linear-gradient(135deg,#1c3440,#172330 60%,#242a36);border:1px solid #344a55;border-radius:22px;padding:20px;margin-bottom:16px;box-shadow:0 14px 40px #0004}.hero-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.eyebrow{font-size:11px;letter-spacing:1.7px;color:var(--muted);text-transform:uppercase}.level{font-size:34px;font-weight:850;line-height:1.2;margin:5px 0}.xp{color:var(--green);font-weight:700}.avatar{width:58px;height:58px;border-radius:18px;background:#243e45;display:grid;place-items:center;font-size:30px;border:1px solid #47636a}.bar{height:8px;background:#0d1720;border-radius:20px;overflow:hidden;margin:14px 0 7px}.bar>i{display:block;height:100%;background:linear-gradient(90deg,#42bd8e,#9af0c9);border-radius:20px}.smallrow{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:13px}.stat b{font-size:21px;display:block}.stat span{font-size:11px;color:var(--muted)}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:22px 2px 11px;gap:8px}.section-head h2{font-size:17px;margin:0}.muted{color:var(--muted)}.btn{border:0;border-radius:12px;padding:10px 14px;background:var(--green);color:#082017;font-weight:800}.btn.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}.btn.ghost{background:transparent;color:var(--green);padding:7px}.btn.danger{background:#3a2027;color:#ffb3b7;border:1px solid #6a343d}.btn.small{padding:7px 10px;font-size:12px}
+.task{display:flex;align-items:center;gap:11px;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:13px;margin-bottom:9px;transition:.2s}.task.done{border-color:#326a55}.check{width:25px;height:25px;flex:none;border:1.5px solid #536577;border-radius:8px;display:grid;place-items:center;color:#092018}.task.done .check{background:var(--green);border-color:var(--green)}.taskmain{min-width:0;flex:1}.taskname{font-weight:650}.taskmeta{font-size:11px;color:var(--muted);margin-top:4px}.reward{color:var(--gold);font-size:12px;font-weight:800;white-space:nowrap}.taskactions{display:flex;gap:5px;align-items:center}.iconbtn{background:#22303d;border:1px solid var(--line);color:#dce7ef;border-radius:9px;padding:6px 8px;font-size:12px}
+.counter{display:flex;align-items:center;gap:6px;margin-top:9px;flex-wrap:wrap}.counter strong{font-size:13px;color:var(--green);min-width:76px}.counter button{background:#20352f;border:1px solid #345849;color:#c8f7df;border-radius:9px;padding:6px 10px;font-size:12px}.counter input{width:78px;padding:6px 8px;background:#0e151e;border:1px solid var(--line);border-radius:8px;color:var(--text)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#101821ed;backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;justify-content:center;gap:3px;padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:5}.nav button{background:transparent;border:0;color:var(--muted);padding:7px 9px;border-radius:12px;font-size:10px;min-width:57px}.nav button.active{background:#20352f;color:var(--green)}.nav .ico{font-size:18px;display:block;margin-bottom:2px}.page{display:none}.page.active{display:block}
+.daygrid{display:grid;grid-template-columns:repeat(11,1fr);gap:5px}.day{aspect-ratio:1;border:1px solid var(--line);border-radius:7px;background:var(--panel);display:grid;place-items:center;font-size:10px;color:var(--muted)}.day.current{outline:2px solid var(--green);color:var(--text)}.day.past{background:#24513f;color:#b4f4d4;border-color:#397a5d}
+.skill{background:var(--panel);border:1px solid var(--line);padding:14px;border-radius:15px;margin-bottom:10px}.skilltop{display:flex;justify-content:space-between;font-weight:700}.skillbar{height:6px;background:#0b1118;border-radius:8px;margin-top:10px;overflow:hidden}.skillbar i{display:block;height:100%;background:var(--blue)}
+.formrow{display:flex;gap:8px;margin:9px 0}.field{width:100%;background:#0e151e;border:1px solid var(--line);color:var(--text);border-radius:11px;padding:12px;min-width:0}.field:focus{outline:1px solid var(--green)}.modal{position:fixed;inset:0;background:#0009;display:none;align-items:flex-end;justify-content:center;z-index:10}.modal.open{display:flex}.sheet{background:#17222e;border:1px solid var(--line);border-radius:22px 22px 0 0;padding:20px;width:min(100%,600px);padding-bottom:calc(22px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}.sheet h2{margin:0 0 15px}.sheet label{display:block;font-size:12px;color:var(--muted);margin:12px 0 5px}.notice{background:#1b2b35;border:1px solid #34505b;border-radius:13px;padding:13px;color:#c6d7df;font-size:12px;line-height:1.5;margin-top:18px}.empty{text-align:center;padding:25px;color:var(--muted)}.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:var(--green);color:#062116;font-weight:800;padding:11px 16px;border-radius:30px;display:none;z-index:20;box-shadow:0 8px 30px #0006}
+.profilegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.profilegrid .full{grid-column:1/-1}.profilebox{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px}.profilebox b{display:block;margin-bottom:5px}.radarwrap{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:12px;text-align:center}.radar{width:100%;max-width:340px;height:auto}.radar-label{font-size:10px;fill:#b6c4d1}.radar-grid{fill:none;stroke:#344555;stroke-width:1}.radar-shape{fill:#62e6ad33;stroke:#62e6ad;stroke-width:2.5}.radar-dot{fill:#62e6ad}
+@media(max-width:390px){.nav button{min-width:0;padding:7px 6px;font-size:9px}.stats{gap:7px}.stat{padding:10px}.task{gap:8px;padding:11px}.reward{font-size:11px}}
+
+.waterfast{display:grid;gap:14px;margin:18px 0}.wfcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px}.wfhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.wfhead h3{margin:0;font-size:16px}.wfmuted{color:var(--muted);font-size:12px}.wfrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}.wfrow .field{flex:1;min-width:95px}.wfbtn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:10px 13px}.wfbtn.primary{background:var(--green);color:#102019;border:0;font-weight:800}.wfbar{height:9px;background:#293747;border-radius:20px;overflow:hidden;margin:10px 0}.wfbar i{display:block;height:100%;background:var(--blue);width:0}.wfstatus{font-size:20px;font-weight:800;margin:5px 0}.wfgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.wfgrid label{font-size:12px;color:var(--muted)}.wfgrid input{width:100%;margin-top:5px}.wfnote{font-size:11px;color:var(--muted);line-height:1.45;margin-top:10px}
+</style></head>
+<body>
+<main class="app">
+<header class="top"><div><div class="brand">◆ LIFE LEVEL</div><div class="sub" id="hello">Прокачивай реальную жизнь</div></div><div class="pill" id="dateLabel">ДЕНЬ 1 / 66</div></header>
+<section class="hero"><div class="hero-row"><div><div class="eyebrow">Твой текущий уровень</div><div class="level">Уровень <span id="level">1</span></div><div class="xp"><span id="xp">0</span> XP</div></div><div class="avatar">⚡</div></div><div class="bar"><i id="xpbar" style="width:0%"></i></div><div class="smallrow"><span id="nextxp">0 / 100 XP до следующего уровня</span><span id="percent">0%</span></div></section>
+<div class="stats"><div class="stat"><b id="doneCount">0/0</b><span>Миссии сегодня</span></div><div class="stat"><b id="streak">0 🔥</b><span>Дней подряд</span></div><div class="stat"><b id="daysLeft">66</b><span>Дней программы</span></div></div>
+
+<section class="page active" id="today">
+<div class="section-head"><h2>Миссии на сегодня</h2><button class="btn ghost" onclick="openTask()">＋ Добавить</button></div>
+<div class="skill" id="stepsBox"><div class="skilltop"><span>🚶 Шаги за сегодня</span><span id="stepPct">0%</span></div><div class="taskmeta" style="margin:6px 0 9px">Введи число шагов или обновляй его в течение дня.</div><div class="formrow"><input class="field" id="stepsInput" type="number" min="0" step="1" placeholder="Например, 3500"><button class="btn" onclick="saveSteps()">Сохранить</button></div><div class="bar"><i id="stepsBar" style="width:0%"></i></div><div class="smallrow"><span id="stepsValue">0 из 7000 шагов</span><span id="stepsReward">+30 XP за цель</span></div><div class="notice" style="margin-top:12px"><b>Автоматическая синхронизация</b><br><span id="healthStatus">Подключение датчика активности пока не настроено.</span><br><button class="btn secondary small" style="margin-top:9px" onclick="showHealthInfo()">Как подключить Health Connect</button> <button class="btn secondary small" style="margin-top:9px" onclick="syncNativeSteps()">Синхронизировать шаги</button></div></div>
+
+<div class="waterfast">
+ <section class="wfcard">
+  <div class="wfhead"><h3>💧 Водный баланс</h3><span class="wfmuted" id="waterPct">0%</span></div>
+  <div class="wfstatus"><span id="waterTotal">0</span> / <span id="waterGoalLabel">2500</span> мл</div>
+  <div class="wfbar"><i id="waterBar"></i></div>
+  <div class="wfrow"><button class="wfbtn" onclick="addWater(150)">+150 мл</button><button class="wfbtn" onclick="addWater(250)">+250 мл</button><button class="wfbtn" onclick="addWater(500)">+500 мл</button></div>
+  <div class="wfgrid" style="margin-top:12px">
+   <label>Цель в день, мл<input class="field" id="waterGoal" type="number" min="250" max="6000" step="100" value="2500"></label>
+   <label>Напоминать каждые, часов<input class="field" id="waterEvery" type="number" min="1" max="8" value="2"></label>
+  </div>
+  <div class="wfrow"><button class="wfbtn primary" onclick="saveWaterSettings()">Сохранить настройки</button><button class="wfbtn" onclick="requestReminders()">Разрешить уведомления</button></div><div class="wfmuted" style="margin-top:8px"><label><input id="nativeWaterEnabled" type="checkbox" checked> Напоминания о воде в фоне (Android)</label></div>
+  <div class="wfmuted" id="waterReminderStatus">Напоминания работают, пока приложение открыто.</div>
+ </section>
+ <section class="wfcard">
+  <div class="wfhead"><h3>⏱ Интервальное голодание</h3><span class="wfmuted" id="fastMode">16:8</span></div>
+  <div class="wfstatus" id="fastStatus">Окно питания</div>
+  <div class="wfmuted" id="fastClock">—</div>
+  <div class="wfbar"><i id="fastBar"></i></div>
+  <div class="wfgrid">
+   <label>Начало окна питания<input class="field" id="eatStart" type="time" value="16:00"></label>
+   <label>Конец окна питания<input class="field" id="eatEnd" type="time" value="00:00"></label>
+  </div>
+  <div class="wfrow"><button class="wfbtn primary" onclick="saveFastSettings()">Сохранить расписание</button><button class="wfbtn" onclick="requestReminders()">Уведомления</button></div><div class="wfmuted" style="margin-top:8px"><label><input id="nativeFastingEnabled" type="checkbox" checked> Напоминания о голодании в фоне (Android)</label></div>
+  <div class="wfnote">Пример 16:00–00:00: питание с 16:00 до полуночи, голодание с 00:00 до 16:00. Состояние переключается автоматически по часам телефона. Уведомления о начале и конце отправляются, пока приложение активно; для надёжных уведомлений в закрытом приложении нужна нативная Android-сборка с точными alarm-разрешениями.</div>
+ </section>
+</div>
+<div id="tasks"></div>
+<div class="notice">Повторения можно добавлять частями: например, +10, +10, +10 отжиманий. XP за миссию начисляется один раз при достижении цели. Дополнительные повторения сохраняются в статистике.</div>
+</section>
+
+<section class="page" id="program"><div class="section-head"><h2>Программа 66 дней</h2><span class="muted" id="programProgress">0%</span></div><div class="bar"><i id="programBar" style="width:0%"></i></div><p class="muted" style="font-size:12px">Зелёные ячейки — дни, когда была выполнена хотя бы одна миссия.</p><div class="daygrid" id="daygrid"></div><div class="section-head"><h2>Этапы развития</h2></div><div class="skill"><b>Дни 1–14 · Фундамент</b><p class="muted">Формируем устойчивые привычки и умеренную нагрузку.</p></div><div class="skill"><b>Дни 15–35 · Развитие</b><p class="muted">Постепенно увеличиваем время и сложность.</p></div><div class="skill"><b>Дни 36–66 · Закрепление</b><p class="muted">Добавляем новые навыки и укрепляем дисциплину.</p></div></section>
+
+<section class="page" id="skills"><div class="section-head"><h2>Паутина развития</h2><span class="muted">Твои характеристики</span></div><div class="radarwrap"><svg id="radar" class="radar" viewBox="0 0 340 310" role="img" aria-label="Диаграмма развития навыков"></svg><div class="muted" style="font-size:11px">Чем больше XP ты набираешь в направлении, тем дальше растёт соответствующая ось.</div></div><div class="section-head"><h2>Уровни навыков</h2></div><div id="skillsList"></div></section>
+
+<section class="page" id="statsPage"><div class="section-head"><h2>Статистика</h2></div><div class="stats"><div class="stat"><b id="totalDone">0</b><span>Выполнено миссий</span></div><div class="stat"><b id="totalXP">0</b><span>Всего XP</span></div><div class="stat"><b id="completion">0%</b><span>Сегодня</span></div></div><div class="skill"><div class="skilltop"><span>Лучший результат</span><span id="bestStreak">0 дней</span></div><p class="muted">Твой рекорд непрерывного выполнения миссий.</p></div><div class="section-head"><h2>Твои цели</h2><button class="btn ghost" onclick="showPage('profile')">Изменить</button></div><div id="goalSummary" class="skill muted">Заполни профиль, чтобы видеть персональные цели.</div><button class="btn secondary" onclick="exportData()">Экспортировать прогресс</button><button class="btn secondary" style="margin-left:7px" onclick="resetData()">Сбросить данные</button><div class="notice">Данные хранятся на этом устройстве. Для автоматического считывания шагов потребуется отдельная интеграция с Apple Health на iPhone или Health Connect на Android. Сейчас шаги можно вносить вручную.</div></section>
+
+<section class="page" id="profile"><div class="section-head"><h2>Мой профиль</h2><button class="btn" onclick="saveProfile()">Сохранить</button></div><div class="skill"><div class="muted" style="font-size:12px;margin-bottom:8px">Исходные данные и цели. Можно менять в любое время.</div><label>Как тебя называть</label><input class="field" id="pName" placeholder="Имя"><div class="profilegrid"><div><label>Рост, см</label><input class="field" id="pHeight" type="number" min="100" max="250" placeholder="177"></div><div><label>Текущий вес, кг</label><input class="field" id="pWeight" type="number" min="30" max="300" step=".1" placeholder="100"></div><div><label>Целевой вес, кг</label><input class="field" id="pTargetWeight" type="number" min="30" max="300" step=".1" placeholder="85"></div><div><label>Возраст</label><input class="field" id="pAge" type="number" min="12" max="100" placeholder="30"></div><div class="full"><label>Главная цель</label><select class="field" id="pGoal"><option value="Похудеть">Похудеть</option><option value="Набрать мышечную массу">Набрать мышечную массу</option><option value="Стать выносливее">Стать выносливее</option><option value="Развить дисциплину">Развить дисциплину</option><option value="Учиться и развиваться">Учиться и развиваться</option><option value="Сбалансированная жизнь">Сбалансированная жизнь</option></select></div><div class="full"><label>Дополнительная цель</label><input class="field" id="pOther" placeholder="Например, научиться подтягиваться 10 раз"></div></div></div><div class="profilegrid"><div class="profilebox"><b>ИМТ</b><div id="bmiValue" style="font-size:23px;color:var(--green)">—</div><div class="muted" id="bmiText" style="font-size:11px">Заполни рост и вес</div></div><div class="profilebox"><b>Разница до цели</b><div id="weightDiff" style="font-size:23px;color:var(--gold)">—</div><div class="muted" style="font-size:11px">кг до целевого веса</div></div></div><div class="notice">Показатели веса и ИМТ — справочная статистика, не медицинский диагноз. Изменение веса лучше оценивать по динамике за несколько недель.</div></section>
+</main>
+<nav class="nav">
+<button class="active" data-page="today"><span class="ico">☀️</span>Сегодня</button>
+<button data-page="program"><span class="ico">📅</span>66 дней</button>
+<button data-page="skills"><span class="ico">🕸️</span>Навыки</button>
+<button data-page="statsPage"><span class="ico">📊</span>Статистика</button>
+<button data-page="profile"><span class="ico">👤</span>Профиль</button>
+</nav>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeTask()"><div class="sheet">
+<h2 id="modalTitle">Новая миссия</h2>
+<label>Название задания</label><input class="field" id="taskTitle" placeholder="Например, отжимания">
+<label>Направление</label><select class="field" id="taskCategory"><option>Физическая форма</option><option>Интеллект</option><option>Психология</option><option>Дисциплина</option><option>Финансы</option><option>Здоровье</option></select>
+<label>Тип задания</label><select class="field" id="taskType" onchange="updateTaskType()"><option value="check">Обычная привычка / галочка</option><option value="counter">Счётчик повторений или минут</option></select>
+<div id="counterFields"><label>Цель за день</label><div class="formrow"><input class="field" id="taskTarget" type="number" min="1" value="10" placeholder="10"><input class="field" id="taskUnit" placeholder="раз / минут / страниц" value="раз"></div>
+<div class="skill" style="margin-top:10px"><label style="display:flex;align-items:center;gap:8px;color:var(--text);font-size:13px"><input id="taskLadder" type="checkbox" onchange="toggleLadderFields()"> Включить автоматическую лесенку</label><div id="ladderFields" style="display:none"><label>Увеличивать после каждого успешного дня</label><select class="field" id="taskIncrement"><option value="1">+1</option><option value="2" selected>+2</option><option value="3">+3</option><option value="5">+5</option><option value="10">+10</option></select><div class="taskmeta">Следующая ступень откроется только после выполнения текущей цели. Пропущенный день не увеличивает нагрузку.</div></div></div></div>
+<label>Награда XP</label><select class="field" id="taskXP"><option value="10">10 XP · лёгкое</option><option value="20" selected>20 XP · обычное</option><option value="30">30 XP · сложное</option><option value="50">50 XP · испытание</option></select>
+<div class="formrow"><button class="btn secondary" style="flex:1" onclick="closeTask()">Отмена</button><button class="btn" style="flex:1" onclick="saveTask()">Сохранить</button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+const todayKey=()=>{let d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
+const defaultTasks=[
+{title:'Отжимания',category:'Физическая форма',xp:20,type:'counter',target:10,unit:'раз'},
+{title:'Приседания',category:'Физическая форма',xp:20,type:'counter',target:20,unit:'раз'},
+{title:'Прочитать 15 страниц',category:'Интеллект',xp:20,type:'check'},
+{title:'Медитировать 5 минут',category:'Психология',xp:15,type:'counter',target:5,unit:'минут'},
+{title:'Изучать английский 15 минут',category:'Интеллект',xp:20,type:'counter',target:15,unit:'минут'}
+];
+const fresh=()=>({xp:0,created:todayKey(),tasks:defaultTasks.map((t,i)=>({...t,id:i+1,logs:{},awarded:{}})),nextId:6,activeDays:[],streak:0,best:0,lastActive:null,steps:{},stepsAwarded:{},stepTarget:7000,water:{goal:2500,every:2,logs:{},nativeEnabled:true},fasting:{eatStart:'16:00',eatEnd:'00:00',lastState:null,nativeEnabled:true},profile:{name:'',height:'',weight:'',targetWeight:'',age:'',goal:'Похудеть',other:''}});
+let state;try{state=JSON.parse(localStorage.getItem('lifeLevel')||'null')}catch(e){state=null}state=state||fresh();
+if(!state.water)state.water={goal:2500,every:2,logs:{}};if(!state.water.logs)state.water.logs={};if(!state.fasting)state.fasting={eatStart:'16:00',eatEnd:'00:00',lastState:null};if(!state.profile)state.profile=fresh().profile;if(!state.steps)state.steps={};if(!state.stepsAwarded)state.stepsAwarded={};if(!state.stepTarget)state.stepTarget=7000;
+state.tasks=(state.tasks||[]).map(t=>({...t,type:t.type||'check',target:t.target||1,unit:t.unit||'раз',ladder:!!t.ladder,ladderIncrement:t.ladderIncrement||2,logs:t.logs||{},awarded:t.awarded||{},done:t.done||{}}));
+let editingId=null;
+function save(){localStorage.setItem('lifeLevel',JSON.stringify(state));render()}
+function dayNo(){let a=new Date(todayKey()+'T00:00:00'),b=new Date(state.created+'T00:00:00');return Math.min(66,Math.max(1,Math.floor((a-b)/86400000)+1))}
+function level(){return Math.floor(state.xp/100)+1}
+function showToast(s){let e=document.getElementById('toast');e.textContent=s;e.style.display='block';setTimeout(()=>e.style.display='none',1800)}
+function logOf(t){return Number(t.logs[todayKey()]||0)}
+function targetFor(t,date=todayKey()){let base=Number(t.target||1);if(!t.ladder)return base;let completed=Object.keys(t.awarded||{}).filter(k=>k<date&&t.awarded[k]).length;return base+completed*Number(t.ladderIncrement||2)}
+function isDone(t){return t.type==='counter'?logOf(t)>=targetFor(t):!!(t.done[todayKey()])}
+function markActive(){let d=todayKey();if(!state.activeDays.includes(d))state.activeDays.push(d);if(state.lastActive!==d){let y=new Date();y.setDate(y.getDate()-1);let prev=[y.getFullYear(),String(y.getMonth()+1).padStart(2,'0'),String(y.getDate()).padStart(2,'0')].join('-');state.streak=state.lastActive===prev?state.streak+1:1;state.best=Math.max(state.best,state.streak);state.lastActive=d}}
+function awardTask(t){if(isDone(t)&&!t.awarded[todayKey()]){t.awarded[todayKey()]=true;state.xp+=Number(t.xp);markActive();showToast('+'+t.xp+' XP · цель достигнута')}}
+function toggleTask(id){let t=state.tasks.find(x=>x.id===id);if(!t)return;if(t.type==='counter'){showToast('Добавляй выполненное через кнопки +1 / +5 / +10');return}if(isDone(t)){delete t.done[todayKey()];if(t.awarded[todayKey()]){state.xp=Math.max(0,state.xp-Number(t.xp));delete t.awarded[todayKey()]}}else{t.done[todayKey()]=true;awardTask(t)}save()}
+function addCount(id,n){let t=state.tasks.find(x=>x.id===id);if(!t)return;t.logs[todayKey()]=Math.max(0,logOf(t)+n);awardTask(t);save()}
+function setCount(id,n){let t=state.tasks.find(x=>x.id===id);if(!t)return;t.logs[todayKey()]=Math.max(0,Number(n)||0);awardTask(t);if(!isDone(t)&&t.awarded[todayKey()]){state.xp=Math.max(0,state.xp-Number(t.xp));delete t.awarded[todayKey()]}save()}
+function saveSteps(){let v=Math.max(0,Number(document.getElementById('stepsInput').value)||0);state.steps[todayKey()]=v;if(v>=state.stepTarget&&!state.stepsAwarded[todayKey()]){state.stepsAwarded[todayKey()]=true;state.xp+=30;markActive();showToast('+30 XP · цель по шагам достигнута')}if(v<state.stepTarget&&state.stepsAwarded[todayKey()]){state.stepsAwarded[todayKey()]=false;state.xp=Math.max(0,state.xp-30)}save()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function openTask(id=null){editingId=id;let t=id?state.tasks.find(x=>x.id===id):null;document.getElementById('modalTitle').textContent=t?'Редактировать миссию':'Новая миссия';document.getElementById('taskTitle').value=t?.title||'';document.getElementById('taskCategory').value=t?.category||'Физическая форма';document.getElementById('taskType').value=t?.type||'check';document.getElementById('taskTarget').value=t?.target||10;document.getElementById('taskUnit').value=t?.unit||'раз';document.getElementById('taskXP').value=String(t?.xp||20);document.getElementById('taskLadder').checked=!!t?.ladder;document.getElementById('taskIncrement').value=String(t?.ladderIncrement||2);updateTaskType();toggleLadderFields();document.getElementById('modal').classList.add('open')}
+function closeTask(){document.getElementById('modal').classList.remove('open');editingId=null}
+function updateTaskType(){document.getElementById('counterFields').style.display=document.getElementById('taskType').value==='counter'?'block':'none'}
+function toggleLadderFields(){document.getElementById('ladderFields').style.display=document.getElementById('taskLadder').checked?'block':'none'}
+function saveTask(){let title=document.getElementById('taskTitle').value.trim();if(!title){showToast('Введи название миссии');return}let obj={title,category:document.getElementById('taskCategory').value,type:document.getElementById('taskType').value,target:Math.max(1,Number(document.getElementById('taskTarget').value)||1),unit:document.getElementById('taskUnit').value.trim()||'раз',xp:Number(document.getElementById('taskXP').value),ladder:document.getElementById('taskType').value==='counter'&&document.getElementById('taskLadder').checked,ladderIncrement:Number(document.getElementById('taskIncrement').value)||2,logs:{},done:{},awarded:{}};if(editingId){let old=state.tasks.find(x=>x.id===editingId);obj.id=old.id;obj.logs=old.logs;obj.done=old.done;obj.awarded=old.awarded;state.tasks=state.tasks.map(x=>x.id===editingId?obj:x)}else{obj.id=state.nextId++;state.tasks.push(obj)}closeTask();save();showToast('Миссия сохранена')}
+function deleteTask(id){if(!confirm('Удалить эту миссию? История её выполнения останется в общем XP.'))return;state.tasks=state.tasks.filter(t=>t.id!==id);save()}
+function showPage(id){document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));if(id==='profile')fillProfile()}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+function render(){let d=dayNo(),done=state.tasks.filter(isDone).length,total=state.tasks.length;document.getElementById('dateLabel').textContent=`ДЕНЬ ${d} / 66`;document.getElementById('level').textContent=level();document.getElementById('xp').textContent=state.xp;let rem=state.xp%100;document.getElementById('xpbar').style.width=rem+'%';document.getElementById('nextxp').textContent=`${rem} / 100 XP до следующего уровня`;document.getElementById('percent').textContent=rem+'%';document.getElementById('doneCount').textContent=done+'/'+total;document.getElementById('streak').textContent=state.streak+' 🔥';document.getElementById('daysLeft').textContent=66-d;document.getElementById('hello').textContent=state.profile.name?`Привет, ${state.profile.name}. Продолжай прокачку.`:'Прокачивай реальную жизнь';
+document.getElementById('tasks').innerHTML=state.tasks.map(t=>{let val=logOf(t),target=targetFor(t),pct=Math.min(100,Math.round(val/target*100));return `<div class="task ${isDone(t)?'done':''}"><div class="check" onclick="toggleTask(${t.id})">${isDone(t)?'✓':''}</div><div class="taskmain"><div class="taskname">${esc(t.title)}</div><div class="taskmeta">${esc(t.category)} · цель ${t.type==='counter'?target+' '+esc(t.unit):'выполнить'}${t.ladder?' · лесенка +'+t.ladderIncrement+' за успешный день':''}</div>${t.type==='counter'?`<div class="counter"><strong>${val} / ${target} ${esc(t.unit)}</strong><button onclick="addCount(${t.id},1)">+1</button><button onclick="addCount(${t.id},5)">+5</button><button onclick="addCount(${t.id},10)">+10</button><input type="number" min="0" value="${val}" onchange="setCount(${t.id},this.value)" aria-label="Ввести количество"></div>`:''}</div><div class="taskactions"><span class="reward">+${t.xp} XP</span><button class="iconbtn" onclick="openTask(${t.id})" aria-label="Редактировать">✎</button><button class="iconbtn" onclick="deleteTask(${t.id})" aria-label="Удалить">×</button></div></div>`}).join('')||'<div class="empty">Пока нет миссий. Добавь первую.</div>';
+let steps=Number(state.steps[todayKey()]||0),sp=Math.min(100,Math.round(steps/state.stepTarget*100));document.getElementById('stepsInput').value=steps||'';document.getElementById('stepsValue').textContent=`${steps.toLocaleString('ru-RU')} из ${state.stepTarget.toLocaleString('ru-RU')} шагов`;document.getElementById('stepsBar').style.width=sp+'%';document.getElementById('stepPct').textContent=sp+'%';document.getElementById('stepsReward').textContent=state.stepsAwarded[todayKey()]?'✓ +30 XP получено':'+30 XP за цель';
+let p=Math.round(state.activeDays.length/66*100);document.getElementById('programProgress').textContent=p+'%';document.getElementById('programBar').style.width=p+'%';document.getElementById('daygrid').innerHTML=Array.from({length:66},(_,i)=>{let date=new Date(state.created+'T00:00:00');date.setDate(date.getDate()+i);let k=[date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');return `<div class="day ${state.activeDays.includes(k)?'past':''} ${i+1===d?'current':''}" title="${k}">${i+1}</div>`}).join('');
+renderSkills();document.getElementById('totalDone').textContent=state.tasks.reduce((s,t)=>s+Object.keys(t.done||{}).filter(k=>t.done[k]).length+Object.keys(t.awarded||{}).filter(k=>t.awarded[k]).length,0);document.getElementById('totalXP').textContent=state.xp;document.getElementById('completion').textContent=(total?Math.round(done/total*100):0)+'%';document.getElementById('bestStreak').textContent=state.best+' дней';let pr=state.profile;document.getElementById('goalSummary').textContent=pr.goal?`${pr.goal}. ${pr.weight||'—'} кг сейчас → ${pr.targetWeight||'—'} кг цель.`:'Заполни профиль, чтобы видеть персональные цели.';updateProfileMetrics();renderWaterFast();}
+const cats=['Физическая форма','Интеллект','Психология','Дисциплина','Финансы','Здоровье'],icons=['🏃','🧠','🧘','🎯','💰','❤️'];
+function categoryXP(c){return state.tasks.filter(t=>t.category===c).reduce((sum,t)=>{let days=new Set([...Object.keys(t.awarded||{}).filter(k=>t.awarded[k]),...Object.keys(t.done||{}).filter(k=>t.done[k])]);return sum+Number(t.xp||0)*days.size},0)}
+function renderSkills(){let vals=cats.map(categoryXP),max=Math.max(100,...vals);document.getElementById('skillsList').innerHTML=cats.map((c,i)=>{let x=vals[i],pct=Math.min(100,x/Math.max(300,max)*100);return `<div class="skill"><div class="skilltop"><span>${icons[i]} ${c}</span><span>${x} XP</span></div><div class="skillbar"><i style="width:${pct}%"></i></div></div>`}).join('');drawRadar(vals)}
+function drawRadar(vals){let svg=document.getElementById('radar'),cx=170,cy=145,r=100,n=6;let pts=(scale)=>Array.from({length:n},(_,i)=>{let a=-Math.PI/2+i*2*Math.PI/n;return [cx+Math.cos(a)*r*scale,cy+Math.sin(a)*r*scale]});let poly=p=>p.map(x=>x.join(',')).join(' ');let grid=[.25,.5,.75,1].map(s=>`<polygon class="radar-grid" points="${poly(pts(s))}"/>`).join('');let axes=Array.from({length:n},(_,i)=>{let p=pts(1)[i];return `<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="#344555"/>`}).join('');let max=Math.max(300,...vals),data=vals.map(v=>.12+.88*Math.min(1,v/max));let shape=pts(1).map((p,i)=>{let a=-Math.PI/2+i*2*Math.PI/n;return [cx+Math.cos(a)*r*data[i],cy+Math.sin(a)*r*data[i]]});let labels=['Физика','Интеллект','Психология','Дисциплина','Финансы','Здоровье'];let labs=labels.map((l,i)=>{let a=-Math.PI/2+i*2*Math.PI/n,x=cx+Math.cos(a)*135,y=cy+Math.sin(a)*125+4;return `<text class="radar-label" x="${x}" y="${y}" text-anchor="middle">${l}</text>`}).join('');svg.innerHTML=grid+axes+`<polygon class="radar-shape" points="${poly(shape)}"/>`+shape.map(p=>`<circle class="radar-dot" cx="${p[0]}" cy="${p[1]}" r="3.5"/>`).join('')+labs}
+function fillProfile(){let p=state.profile;for(let [id,key] of [['pName','name'],['pHeight','height'],['pWeight','weight'],['pTargetWeight','targetWeight'],['pAge','age'],['pGoal','goal'],['pOther','other']])document.getElementById(id).value=p[key]??'';updateProfileMetrics()}
+function saveProfile(){let p=state.profile;p.name=document.getElementById('pName').value.trim();p.height=document.getElementById('pHeight').value;p.weight=document.getElementById('pWeight').value;p.targetWeight=document.getElementById('pTargetWeight').value;p.age=document.getElementById('pAge').value;p.goal=document.getElementById('pGoal').value;p.other=document.getElementById('pOther').value.trim();save();showToast('Профиль сохранён')}
+function updateProfileMetrics(){let p=state.profile,h=Number(p.height)/100,w=Number(p.weight),tw=Number(p.targetWeight);if(h>0&&w>0){let bmi=w/(h*h);document.getElementById('bmiValue').textContent=bmi.toFixed(1);document.getElementById('bmiText').textContent='ИМТ · справочный показатель'}else{document.getElementById('bmiValue').textContent='—';document.getElementById('bmiText').textContent='Заполни рост и вес'}document.getElementById('weightDiff').textContent=w>0&&tw>0?Math.abs(w-tw).toFixed(1):'—'}
+
+function waterToday(){return Number(state.water.logs[todayKey()]||0)}
+function addWater(ml){state.water.logs[todayKey()]=waterToday()+ml;save();showToast('Добавлено '+ml+' мл воды')}
+function saveWaterSettings(){let goal=Math.max(250,Math.min(6000,Number(document.getElementById('waterGoal').value)||2500));let every=Math.max(1,Math.min(8,Number(document.getElementById('waterEvery').value)||2));state.water.goal=goal;state.water.every=every;state.water.nativeEnabled=document.getElementById('nativeWaterEnabled').checked;save();persistNativeReminderSettings();showToast('Настройки воды сохранены')}
+function timeMinutes(v){let a=(v||'00:00').split(':').map(Number);return a[0]*60+a[1]}
+function fastingInfo(){let now=new Date(),m=now.getHours()*60+now.getMinutes(),a=timeMinutes(state.fasting.eatStart),b=timeMinutes(state.fasting.eatEnd),eating=a<b?(m>=a&&m<b):(m>=a||m<b);let total=eating?(b-a+1440)%1440:(a-b+1440)%1440;let elapsed=eating?(m-a+1440)%1440:(m-b+1440)%1440;return {eating,total,elapsed,remaining:Math.max(0,total-elapsed)}}
+function renderWaterFast(){
+ let goal=Number(state.water.goal)||2500,amount=waterToday(),pct=Math.min(100,Math.round(amount/goal*100));
+ document.getElementById('waterTotal').textContent=amount;document.getElementById('waterGoalLabel').textContent=goal;document.getElementById('waterPct').textContent=pct+'%';document.getElementById('waterBar').style.width=pct+'%';
+ document.getElementById('waterGoal').value=goal;document.getElementById('waterEvery').value=state.water.every||2;document.getElementById('nativeWaterEnabled').checked=state.water.nativeEnabled!==false;
+ document.getElementById('eatStart').value=state.fasting.eatStart||'16:00';document.getElementById('eatEnd').value=state.fasting.eatEnd||'00:00';document.getElementById('nativeFastingEnabled').checked=state.fasting.nativeEnabled!==false;
+ let f=fastingInfo(),hrs=Math.floor(f.remaining/60),mins=f.remaining%60;
+ document.getElementById('fastStatus').textContent=f.eating?'🍽 Окно питания':'⏳ Период голодания';
+ document.getElementById('fastClock').textContent=(f.eating?'До закрытия окна: ':'До окончания голодания: ')+hrs+' ч '+mins+' мин';
+ document.getElementById('fastBar').style.width=Math.min(100,Math.round(f.elapsed/Math.max(1,f.total)*100))+'%';
+ let eat=timeMinutes(state.fasting.eatStart),end=timeMinutes(state.fasting.eatEnd),fastH=((eat-end+1440)%1440)/60,eatH=((end-eat+1440)%1440)/60;
+ document.getElementById('fastMode').textContent=Math.round(fastH)+':'+String(Math.round(eatH)).padStart(2,'0');
+}
+function saveFastSettings(){let a=document.getElementById('eatStart').value,b=document.getElementById('eatEnd').value;if(!a||!b||a===b){showToast('Укажи разные времена начала и конца');return}state.fasting.eatStart=a;state.fasting.eatEnd=b;state.fasting.nativeEnabled=document.getElementById('nativeFastingEnabled').checked;state.fasting.lastState=null;save();persistNativeReminderSettings();checkScheduleAlerts(true);showToast('Расписание голодания сохранено')}
+async function requestReminders(){if(window.AndroidBridge&&AndroidBridge.requestNotificationPermission){AndroidBridge.requestNotificationPermission();persistNativeReminderSettings();return}if(!('Notification'in window)){showToast('Браузер не поддерживает уведомления');return}let p=await Notification.requestPermission();document.getElementById('waterReminderStatus').textContent=p==='granted'?'Уведомления разрешены. Приложение должно оставаться открытым.':'Уведомления не разрешены';if(p==='granted')checkScheduleAlerts(true)}
+let lastWaterReminder=Date.now(),lastScheduleKey='';
+function notifyUser(title,body){if('Notification'in window&&Notification.permission==='granted'){try{new Notification(title,{body,icon:'./icon.svg'})}catch(e){}}}
+function checkScheduleAlerts(force=false){
+ let f=fastingInfo(),key=todayKey()+'-'+f.eating;
+ if(force|| (state.fasting.lastState!==null&&state.fasting.lastState!==f.eating)){
+  notifyUser(f.eating?'Окно питания открыто':'Окно питания закрывается',f.eating?'Можно начинать запланированный приём пищи.':'Пора завершить окно питания и начать период голодания.');
+ }
+ state.fasting.lastState=f.eating;
+ let now=Date.now(),every=(Number(state.water.every)||2)*3600000;
+ if(!force&&now-lastWaterReminder>=every&&waterToday()<Number(state.water.goal||2500)){notifyUser('Время выпить воды','Добавь стакан воды в дневной баланс.');lastWaterReminder=now}
+}
+
+
+function persistNativeReminderSettings(){
+ if(window.AndroidBridge&&AndroidBridge.saveReminderSettings){
+  AndroidBridge.saveReminderSettings(Number(state.water.every)||2,state.water.nativeEnabled!==false,state.fasting.eatStart||'16:00',state.fasting.eatEnd||'00:00',state.fasting.nativeEnabled!==false);
+  document.getElementById('waterReminderStatus').textContent='Фоновые напоминания Android настроены.';
+ } else {
+  document.getElementById('waterReminderStatus').textContent='В браузере напоминания доступны только при открытом приложении.';
+ }
+}
+function syncNativeSteps(){
+ if(window.AndroidBridge&&AndroidBridge.syncSteps){AndroidBridge.syncSteps();}
+ else showToast('Автосинхронизация доступна в Android-приложении');
+}
+function applyNativeSteps(steps){
+ document.getElementById('stepsInput').value=Number(steps)||0;saveSteps();
+ document.getElementById('healthStatus').textContent='Health Connect подключён · синхронизация выполнена';
+}
+function healthConnectResult(ok,message){
+ document.getElementById('healthStatus').textContent=message;
+ if(!ok)showToast(message);
+}
+function nativeNotificationPermission(granted){
+ document.getElementById('waterReminderStatus').textContent=granted?'Разрешение на уведомления выдано.':'Разрешение на уведомления не выдано.';
+}
+
+function showHealthInfo(){alert('Автоматические шаги требуют Android-приложение с разрешением Health Connect (READ_STEPS) либо iPhone-приложение с HealthKit. В этой веб-версии нет доступа к системным датчикам. Текущие шаги можно вводить вручную.');}
+function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='life-level-progress.json';a.click();URL.revokeObjectURL(a.href)}
+function resetData(){if(confirm('Удалить весь прогресс и начать заново?')){localStorage.removeItem('lifeLevel');location.reload()}}
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});render();checkScheduleAlerts(true);setInterval(()=>{checkScheduleAlerts();renderWaterFast()},60000);
+</script>
+</body></html>

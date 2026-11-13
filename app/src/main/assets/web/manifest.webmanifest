@@ -1,0 +1,17 @@
+{
+  "name": "LIFE LEVEL",
+  "short_name": "LIFE LEVEL",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1219",
+  "theme_color": "#0d1219",
+  "description": "Прокачивай реальную жизнь через ежедневные миссии",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

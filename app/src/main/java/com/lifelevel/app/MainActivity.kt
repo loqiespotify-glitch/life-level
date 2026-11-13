@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
     }
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { granted: Set<String> -> js("nativeNotificationPermission($granted)") }
+    ) { granted: Boolean -> js("nativeNotificationPermission($granted)") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

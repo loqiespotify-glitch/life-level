@@ -130,6 +130,15 @@ details summary{color:#dce9ff}
 .coach-hero,.boss-card{border-color:#425f91!important}
 .toast{background:#122747!important;border:1px solid #7aa8e5!important;color:#eef6ff!important}
 
+
+/* Real illustrated hunter portraits */
+.portrait-art{display:block;width:100%;height:100%;background-image:url('hero-atlas.webp');background-size:300% 200%;background-repeat:no-repeat;background-position:0 0}
+.avatar .portrait-art{border-radius:4px}
+.avatar-option .portrait-art{width:100%;aspect-ratio:1;height:auto;border:1px solid #6a9ce4;box-shadow:0 0 18px #538bff44;margin:0 auto 8px}
+.avatar-option{overflow:hidden}
+.avatar-option svg{display:none}
+.avatar-option.selected{border-color:#a9d8ff;box-shadow:0 0 0 1px #8ecaff66,0 0 22px #527fff77}
+
 </style></head>
 <body>
 <main class="app">
@@ -267,7 +276,7 @@ const avatarDefs=[
 {id:'assassin',name:'Тень',role:'Клинок из темноты',colors:['#c66b63','#29232e','#d8b1a0'],mark:'☾'},
 {id:'paladin',name:'Паладин',role:'Защитник света',colors:['#f0d17b','#66502e','#fff0c2'],mark:'✧'}
 ];
-function avatarSvg(id){let a=avatarDefs.find(x=>x.id===id)||avatarDefs[0],c=a.colors;let cfg={knight:{hood:'#253c64',cloak:'#172b4a',armor:'#9bb9d9',eye:'#80d8ff'},ranger:{hood:'#294b3b',cloak:'#142d26',armor:'#8dbd9c',eye:'#8af0c5'},berserker:{hood:'#5b332d',cloak:'#271c21',armor:'#c28b68',eye:'#ff967c'},mage:{hood:'#4b337b',cloak:'#211638',armor:'#bba0ff',eye:'#c6a3ff'},assassin:{hood:'#3b283c',cloak:'#171521',armor:'#a36a9b',eye:'#ff91d5'},paladin:{hood:'#6c592e',cloak:'#322b1d',armor:'#e7d49a',eye:'#ffe9a3'}}[id]||{};return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg${id}" x2="0.9" y2="1"><stop stop-color="${c[0]}"/><stop offset="1" stop-color="#080d19"/></linearGradient><radialGradient id="aura${id}"><stop stop-color="${cfg.eye}" stop-opacity=".7"/><stop offset="1" stop-color="${cfg.eye}" stop-opacity="0"/></radialGradient><linearGradient id="metal${id}" x2="1" y2="1"><stop stop-color="#e6f4ff"/><stop offset=".35" stop-color="${cfg.armor}"/><stop offset="1" stop-color="#273b63"/></linearGradient></defs><rect width="120" height="120" fill="url(#bg${id})"/><path d="M0 100L28 61 42 75 60 48 81 77 98 58 120 91V120H0Z" fill="#060b16" opacity=".8"/><circle cx="60" cy="43" r="52" fill="url(#aura${id})"/><path d="M10 120Q15 80 43 75L60 90 78 75Q106 81 112 120Z" fill="${cfg.cloak}" stroke="${cfg.armor}" stroke-width="2"/><path d="M31 113L42 81 60 96 79 81 90 113 75 120H44Z" fill="url(#metal${id})" stroke="${cfg.armor}" stroke-width="2"/><path d="M43 43Q39 19 60 17Q84 18 79 48L75 65Q60 82 45 65Z" fill="#a77c69" stroke="#111827" stroke-width="2"/><path d="M29 52Q20 9 60 5Q99 10 90 55L78 42 72 25 58 32 42 28Z" fill="${cfg.hood}" stroke="${cfg.armor}" stroke-width="3"/><path d="M37 43Q43 35 55 41M65 41Q77 35 83 43" fill="none" stroke="#101726" stroke-width="5"/><path d="M43 49l10-1m14 0 10 1" stroke="${cfg.eye}" stroke-width="3" stroke-linecap="round" filter="drop-shadow(0 0 4px ${cfg.eye})"/><path d="M55 65q5 3 10 0" fill="none" stroke="#533d42" stroke-width="2"/><path d="M60 84l-10 15 10 13 10-13Z" fill="${cfg.eye}" opacity=".85"/><path d="M15 12L23 4m82 8-8-8M8 74l10-8m84 8-10-8" stroke="${cfg.eye}" stroke-opacity=".7" stroke-width="2"/><path d="M5 5h110v110H5Z" fill="none" stroke="${cfg.armor}" stroke-opacity=".65" stroke-width="2"/><path d="M12 12h13M12 12v13m83-13h13v13M12 95v13h13m70 0h13V95" fill="none" stroke="#d4e8ff" stroke-width="2" opacity=".65"/></svg>`}
+function avatarSvg(id){const pos={knight:'0% 0%',ranger:'50% 0%',berserker:'100% 0%',mage:'0% 100%',assassin:'50% 100%',shadow:'50% 100%',paladin:'100% 100%'};return `<span class="portrait-art" style="background-position:${pos[id]||pos.knight}"></span>`}
 function renderAvatar(){let id=state.profile.avatar||'knight',el=document.getElementById('heroAvatar');if(el)el.innerHTML=avatarSvg(id);let list=document.getElementById('avatarOptions');if(list)list.innerHTML=avatarDefs.map(a=>`<button class="avatar-option ${a.id===id?'selected':''}" onclick="chooseAvatar('${a.id}')">${avatarSvg(a.id)}<b>${a.name}</b><small>${a.role}</small></button>`).join('')}
 function openAvatarPicker(){renderAvatar();document.getElementById('avatarPicker').classList.add('open')}
 function closeAvatarPicker(){document.getElementById('avatarPicker').classList.remove('open')}

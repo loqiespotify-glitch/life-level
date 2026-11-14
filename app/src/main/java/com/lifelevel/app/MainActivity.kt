@@ -58,14 +58,14 @@ class MainActivity : ComponentActivity() {
      val data=JSONObject(connection.inputStream.bufferedReader().use{it.readText()})
      val tag=data.optString("tag_name","").removePrefix("v")
      val latest=data.optString("html_url","https://github.com/loqiespotify-glitch/life-level/releases/latest")
-     val current=BuildConfig.VERSION_NAME
+     val current=packageManager.getPackageInfo(packageName,0).versionName ?: "0.0.0"
      fun parts(v:String)=v.split(".").map{it.takeWhile{ch->ch.isDigit()}.toIntOrNull()?:0}
      val x=parts(tag);val y=parts(current);var newer=false
      for(i in 0 until maxOf(x.size,y.size)){val xv=x.getOrElse(i){0};val yv=y.getOrElse(i){0};if(xv!=yv){newer=xv>yv;break}}
-     val payload=JSONObject().put("ok",true).put("current",current).put("latest",tag).put("update",newer).put("url",latest)
+     val payload=org.json.JSONObject(); payload.put("ok",true); payload.put("current",current); payload.put("latest",tag); payload.put("update",newer); payload.put("url",latest)
      runOnUiThread{js("onUpdateCheck(${JSONObject.quote(payload.toString())})")}
     } catch(e:Exception){
-     val payload=JSONObject().put("ok",false).put("error","Не удалось проверить обновления. Проверь интернет.")
+     val payload=org.json.JSONObject(); payload.put("ok",false); payload.put("error","Не удалось проверить обновления. Проверь интернет.")
      runOnUiThread{js("onUpdateCheck(${JSONObject.quote(payload.toString())})")}
     } finally { connection?.disconnect() }
    }.start()

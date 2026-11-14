@@ -156,7 +156,8 @@ function generatePersonalPlan(){
  if(focus.includes('discipline'))add('Планирование дня','Дисциплина',5,'минут',15);
  plan.forEach(t=>{t.id=state.nextId++;state.tasks.push(t)});
  save();showToast(plan.length?'Добавлено миссий: '+plan.length:'Подходящие миссии уже есть');
-}\nfunction waterToday(){return Number(state.water.logs[todayKey()]||0)}
+}
+function waterToday(){return Number(state.water.logs[todayKey()]||0)}
 function addWater(ml){state.water.logs[todayKey()]=waterToday()+ml;save();showToast('Добавлено '+ml+' мл воды')}
 function saveWaterSettings(){let goal=Math.max(250,Math.min(6000,Number(document.getElementById('waterGoal').value)||2500));let every=Math.max(1,Math.min(8,Number(document.getElementById('waterEvery').value)||2));state.water.goal=goal;state.water.every=every;state.water.nativeEnabled=document.getElementById('nativeWaterEnabled').checked;save();persistNativeReminderSettings();showToast('Настройки воды сохранены')}
 function timeMinutes(v){let a=(v||'00:00').split(':').map(Number);return a[0]*60+a[1]}

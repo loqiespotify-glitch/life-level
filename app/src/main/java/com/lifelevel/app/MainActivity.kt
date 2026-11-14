@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -27,6 +29,9 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
 class MainActivity : ComponentActivity() {
  private lateinit var web:WebView
  private var pageReady=false
@@ -44,6 +49,28 @@ class MainActivity : ComponentActivity() {
  private fun requestHealthConnect(){val status=HealthConnectClient.getSdkStatus(this);if(status!=HealthConnectClient.SDK_AVAILABLE){js("healthConnectResult(false,'Health Connect не установлен или требует обновления')");try{startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=com.google.android.apps.healthdata")))}catch(_:Exception){};return};scope.launch{try{val c=HealthConnectClient.getOrCreate(this@MainActivity);val granted=c.permissionController.getGrantedPermissions();if(granted.containsAll(stepPermissions))readTodaySteps() else healthPermissionLauncher.launch(stepPermissions)}catch(_:Exception){js("healthConnectResult(false,'Не удалось открыть Health Connect')")}}}
  private fun readTodaySteps(){scope.launch{try{val c=HealthConnectClient.getOrCreate(this@MainActivity);val start=LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant();val result=c.aggregate(AggregateRequest(metrics=setOf(StepsRecord.COUNT_TOTAL),timeRangeFilter=TimeRangeFilter.between(start,Instant.now())));val n=result[StepsRecord.COUNT_TOTAL]?:0L;js("healthConnectResult(true,'Health Connect синхронизирован');applyNativeSteps($n)")}catch(_:Exception){js("healthConnectResult(false,'Ошибка чтения Health Connect')")}}}
  inner class AndroidBridge{
+  @JavascriptInterface fun checkForUpdates(){
+   Thread {
+    var connection:HttpURLConnection?=null
+    try {
+     connection=(URL("https://api.github.com/repos/loqiespotify-glitch/life-level/releases/latest").openConnection() as HttpURLConnection).apply { requestMethod="GET"; connectTimeout=10000; readTimeout=10000; setRequestProperty("Accept","application/vnd.github+json"); setRequestProperty("User-Agent","LIFE-LEVEL-Android") }
+     if(connection.responseCode !in 200..299) throw Exception("HTTP ${connection.responseCode}")
+     val data=JSONObject(connection.inputStream.bufferedReader().use{it.readText()})
+     val tag=data.optString("tag_name","").removePrefix("v")
+     val latest=data.optString("html_url","https://github.com/loqiespotify-glitch/life-level/releases/latest")
+     val current=BuildConfig.VERSION_NAME
+     fun parts(v:String)=v.split(".").map{it.takeWhile{ch->ch.isDigit()}.toIntOrNull()?:0}
+     val x=parts(tag);val y=parts(current);var newer=false
+     for(i in 0 until maxOf(x.size,y.size)){val xv=x.getOrElse(i){0};val yv=y.getOrElse(i){0};if(xv!=yv){newer=xv>yv;break}}
+     val payload=JSONObject().put("ok",true).put("current",current).put("latest",tag).put("update",newer).put("url",latest)
+     runOnUiThread{js("onUpdateCheck(${JSONObject.quote(payload.toString())})")}
+    } catch(e:Exception){
+     val payload=JSONObject().put("ok",false).put("error","Не удалось проверить обновления. Проверь интернет.")
+     runOnUiThread{js("onUpdateCheck(${JSONObject.quote(payload.toString())})")}
+    } finally { connection?.disconnect() }
+   }.start()
+  }
+  @JavascriptInterface fun openUpdatePage(url:String){runOnUiThread{try{val uri=Uri.parse(url);if(uri.scheme=="https"&&uri.host=="github.com")startActivity(Intent(Intent.ACTION_VIEW,uri))}catch(_:Exception){}}}
   @JavascriptInterface fun startStepCounter(){runOnUiThread{requestNativeSteps()}}
   @JavascriptInterface fun stopStepCounter(){runOnUiThread{stopService(Intent(this@MainActivity,StepCounterService::class.java));StepCounterService.isRunning=false;js("nativeStepStatus(false,'Шагомер остановлен')")}}
   @JavascriptInterface fun getTodaySteps():Int=StepCounterService.todaySteps(this@MainActivity)

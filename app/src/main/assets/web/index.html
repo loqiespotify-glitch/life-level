@@ -147,7 +147,7 @@ function generatePersonalPlan(){
  p.fitness=fitness;p.focus=focus;
  const scale={beginner:.65,basic:.85,intermediate:1.15,advanced:1.5,expert:1.8}[fitness]||.65;
  const plan=[];
- const add=(title,category,target,unit,xp,adaptive=false,increment=1)=>{if(!state.tasks.some(t=>t.title.toLowerCase()===title.toLowerCase()))plan.push({title,category,type:'counter',target:Math.max(1,Math.round(target*scale)),unit,xp,ladder:false,adaptiveProgression:adaptive,ladderIncrement:increment,logs:{},done:{},awarded:{}})};
+ let upgraded=0;const add=(title,category,target,unit,xp,adaptive=false,increment=1)=>{let existing=state.tasks.find(t=>t.title.toLowerCase()===title.toLowerCase());if(existing){if(adaptive&&!existing.adaptiveProgression){existing.adaptiveProgression=true;existing.ladder=false;existing.ladderIncrement=increment;upgraded++}return}plan.push({title,category,type:'counter',target:Math.max(1,Math.round(target*scale)),unit,xp,ladder:false,adaptiveProgression:adaptive,ladderIncrement:increment,logs:{},done:{},awarded:{}})};
  if(focus.includes('weight')){add('Прогулка','Физическая форма',20,'минут',20,true,2);add('Контроль питания','Здоровье',1,'раз',15)}
  if(focus.includes('strength')){add('Отжимания','Физическая форма',fitness==='beginner'?5:fitness==='basic'?8:fitness==='intermediate'?15:fitness==='advanced'?22:30,'раз',25,true,1);add('Приседания','Физическая форма',fitness==='beginner'?10:fitness==='basic'?15:fitness==='intermediate'?25:fitness==='advanced'?35:45,'раз',20,true,2)}
  if(focus.includes('endurance'))add('Кардио или быстрая ходьба','Физическая форма',fitness==='beginner'?10:fitness==='basic'?15:fitness==='intermediate'?25:fitness==='advanced'?35:45,'минут',25,true,2);
@@ -155,7 +155,7 @@ function generatePersonalPlan(){
  if(focus.includes('mind'))add('Обучение','Интеллект',15,'минут',20);
  if(focus.includes('discipline'))add('Планирование дня','Дисциплина',5,'минут',15);
  plan.forEach(t=>{t.id=state.nextId++;state.tasks.push(t)});
- save();showToast(plan.length?'Добавлено миссий: '+plan.length:'Подходящие миссии уже есть');
+ save();showToast(plan.length?'Добавлено миссий: '+plan.length:upgraded?'Обновлена прогрессия миссий: '+upgraded:'Подходящие миссии уже есть');
 }
 function waterToday(){return Number(state.water.logs[todayKey()]||0)}
 function addWater(ml){state.water.logs[todayKey()]=waterToday()+ml;save();showToast('Добавлено '+ml+' мл воды')}

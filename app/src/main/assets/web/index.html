@@ -139,6 +139,48 @@ details summary{color:#dce9ff}
 .avatar-option svg{display:none}
 .avatar-option.selected{border-color:#a9d8ff;box-shadow:0 0 0 1px #8ecaff66,0 0 22px #527fff77}
 
+
+/* 1.0.4 illustrated hunter HUD */
+body{background:radial-gradient(ellipse at 82% 3%,#263d7c99,transparent 34%),radial-gradient(ellipse at 8% 38%,#301b6c55,transparent 35%),linear-gradient(180deg,#050916,#080d1a 48%,#050815);background-attachment:fixed}
+body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.18;background:radial-gradient(circle at 50% 15%,#8c7bff 0 1px,transparent 2px),radial-gradient(circle at 18% 52%,#5faaff 0 1px,transparent 2px),radial-gradient(circle at 82% 72%,#aa77ff 0 1px,transparent 2px);background-size:110px 130px,150px 170px,190px 210px}
+.top{border-bottom:1px solid #334b83;padding-bottom:13px}
+.brand{color:#a9c8ff;text-shadow:0 0 18px #567fff;letter-spacing:4px}
+.hero{min-height:190px;padding:20px 18px 17px!important;border:1px solid #6588d7!important;border-radius:9px!important;background-image:linear-gradient(90deg,#081124f5 0%,#0b1731e8 48%,#0a1124a6 100%),url('hero-atlas.webp')!important;background-size:cover,auto 155%!important;background-position:center,right 22%!important;background-repeat:no-repeat!important;box-shadow:inset 0 0 35px #6b8dff24,0 12px 32px #0009!important}
+.hero .avatar{width:112px;height:142px;border-radius:8px!important;padding:3px!important;background:linear-gradient(140deg,#b8d9ff,#5c65d9,#a17aff)!important;box-shadow:0 0 0 2px #8fcaff55,0 0 26px #628dff88!important}
+.hero .avatar .portrait-art{border-radius:5px!important}
+.level{font-size:38px;text-shadow:0 0 20px #6a8cff55}
+.xp{color:#9ed5ff!important;font-size:18px}
+.eyebrow{color:#9bb8ed!important;letter-spacing:3px}
+.hero .bar{margin-top:18px}
+.stats{gap:8px}
+.stat{min-height:78px;padding:13px 11px!important;border-radius:7px!important;background:linear-gradient(145deg,#13213a,#0a1122)!important;border:1px solid #3d5a91!important;box-shadow:inset 0 0 18px #5179c51a,0 8px 20px #0006!important}
+.stat b{font-size:25px;color:#e8f2ff;text-shadow:0 0 12px #7baaff55}
+.stat span{color:#9eafd0}
+.section-head{margin-top:23px}
+.section-head h2{letter-spacing:1px;text-transform:uppercase;color:#dceaff}
+.skill,.wfcard,.challenge,.boss-card,.coach-hero,.character-hero,.character-stat,.achievement{border-radius:7px!important;background:linear-gradient(145deg,#101d34f2,#080f20f5)!important;border:1px solid #334e7e!important;box-shadow:inset 0 0 22px #507dca17,0 8px 24px #0007!important}
+.task{position:relative;overflow:hidden;border-radius:7px!important;border:1px solid #3c5a92!important;background:linear-gradient(90deg,#102143,#0a1225 55%,#11102b)!important;box-shadow:inset 0 0 24px #578bff15,0 7px 18px #0007!important}
+.task:after{content:'';position:absolute;right:-20px;top:-30px;width:120px;height:120px;background:radial-gradient(circle,#795fff20,transparent 68%);pointer-events:none}
+.task.done{border-color:#4a8eae!important;background:linear-gradient(90deg,#102d3d,#0b1629)!important}
+.bar,.wfbar,.taskprogress,.challenge-progress,.boss-hp{background:#030916!important;border:1px solid #2c4777!important}
+.bar>i,.wfbar i,.taskprogress i{background:linear-gradient(90deg,#4b6cff,#67d9ff)!important;box-shadow:0 0 14px #568fff99}
+.wfhead h3{color:#dceaff}
+.wfstatus{color:#f0f5ff}
+.wfbtn{background:linear-gradient(145deg,#17294b,#0b1427)!important;border:1px solid #3d5b91!important;color:#cfe2ff!important;border-radius:6px!important}
+.wfbtn.primary{background:linear-gradient(135deg,#3e5fe3,#6b4fd0)!important;color:white!important}
+.settings summary,.compact-feature summary{color:#b9d2ff}
+.btn{background:linear-gradient(135deg,#3c5fd4,#6545b9)!important;border:1px solid #8aaaff!important;border-radius:6px!important;box-shadow:0 0 16px #4f6fff44!important;color:#fff!important}
+.btn.secondary,.btn.ghost,.gearbtn{background:linear-gradient(145deg,#142542,#0a1326)!important;border:1px solid #385785!important;color:#b9d4ff!important;border-radius:6px!important}
+.field,input,select,textarea{background:#070e1d!important;border:1px solid #38517d!important;color:#eef5ff!important;border-radius:5px!important}
+.nav{background:linear-gradient(180deg,#0a1223f5,#050a16)!important;border-top:1px solid #3c5b93!important;box-shadow:0 -10px 30px #000a}
+.nav button{color:#8194b8!important}.nav button.active{color:#d7e8ff!important;background:linear-gradient(180deg,#344da866,#5135a455)!important;border-radius:8px!important;text-shadow:0 0 12px #77aaff}
+.nav .ico{filter:drop-shadow(0 0 6px #6c93ff88)}
+.avatar-sheet{border-radius:10px!important;background:radial-gradient(ellipse at 50% 0,#293e78,#10192e 45%,#070c19)!important;border:1px solid #698fe0!important}
+.avatar-option{border-radius:7px!important;background:linear-gradient(145deg,#1b2c4d,#0a1224)!important}
+.avatar-option.selected{border:2px solid #a4dfff!important;box-shadow:0 0 25px #5c91ff88!important}
+.achievement{min-height:180px!important}
+.achievement .shield{width:84px!important;height:96px!important}
+
 </style></head>
 <body>
 <main class="app">

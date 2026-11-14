@@ -33,7 +33,7 @@ button,input,select{font:inherit}button{cursor:pointer}.app{max-width:760px;marg
 
 <section class="page active" id="today">
 <div class="section-head"><h2>Миссии на сегодня</h2><button class="btn ghost" onclick="openTask()">＋ Добавить</button></div>
-<div class="skill" id="stepsBox"><div class="skilltop"><span>🚶 Шаги за сегодня</span><span id="stepPct">0%</span></div><div class="taskmeta" style="margin:6px 0 9px">Введи число шагов или обновляй его в течение дня.</div><div class="formrow"><input class="field" id="stepsInput" type="number" min="0" step="1" placeholder="Например, 3500"><button class="btn" onclick="saveSteps()">Сохранить</button></div><div class="bar"><i id="stepsBar" style="width:0%"></i></div><div class="smallrow"><span id="stepsValue">0 из 7000 шагов</span><span id="stepsReward">+30 XP за цель</span></div><div class="notice" style="margin-top:12px"><b>Автоматическая синхронизация</b><br><span id="healthStatus">Подключение датчика активности пока не настроено.</span><br><button class="btn secondary small" style="margin-top:9px" onclick="showHealthInfo()">Как подключить Health Connect</button> <button class="btn secondary small" style="margin-top:9px" onclick="syncNativeSteps()">Синхронизировать шаги</button></div></div>
+<div class="skill" id="stepsBox"><div class="skilltop"><span>🚶 Шаги за сегодня</span><span id="stepPct">0%</span></div><div class="taskmeta" style="margin:6px 0 9px">Встроенный датчик телефона считает шаги даже с выключенным экраном.</div><div class="formrow"><input class="field" id="stepsInput" type="number" min="0" step="1" placeholder="Например, 3500"><button class="btn" onclick="saveSteps()">Сохранить вручную</button></div><div class="bar"><i id="stepsBar" style="width:0%"></i></div><div class="smallrow"><span id="stepsValue">0 из 7000 шагов</span><span id="stepsReward">+30 XP за цель</span></div><div class="notice" style="margin-top:12px"><b>Встроенный шагомер Android</b><br><span id="healthStatus">Шагомер выключен.</span><br><button class="btn small" style="margin-top:9px" onclick="startNativeSteps()">Включить шагомер</button> <button class="btn secondary small" style="margin-top:9px" onclick="stopNativeSteps()">Остановить</button> <button class="btn secondary small" style="margin-top:9px" onclick="syncNativeSteps()">Обновить</button><div class="taskmeta" style="margin-top:8px">Счёт начнётся после включения. Нужен аппаратный датчик шагов.</div></div></div>
 
 <div class="waterfast">
  <section class="wfcard">
@@ -181,18 +181,12 @@ function persistNativeReminderSettings(){
   document.getElementById('waterReminderStatus').textContent='В браузере напоминания доступны только при открытом приложении.';
  }
 }
-function syncNativeSteps(){
- if(window.AndroidBridge&&AndroidBridge.syncSteps){AndroidBridge.syncSteps();}
- else showToast('Автосинхронизация доступна в Android-приложении');
-}
-function applyNativeSteps(steps){
- document.getElementById('stepsInput').value=Number(steps)||0;saveSteps();
- document.getElementById('healthStatus').textContent='Health Connect подключён · синхронизация выполнена';
-}
-function healthConnectResult(ok,message){
- document.getElementById('healthStatus').textContent=message;
- if(!ok)showToast(message);
-}
+function startNativeSteps(){if(window.AndroidBridge&&AndroidBridge.startStepCounter)AndroidBridge.startStepCounter();else showToast('Шагомер доступен в Android-приложении')}
+function stopNativeSteps(){if(window.AndroidBridge&&AndroidBridge.stopStepCounter)AndroidBridge.stopStepCounter()}
+function syncNativeSteps(){if(window.AndroidBridge&&AndroidBridge.getTodaySteps)applyNativeSteps(AndroidBridge.getTodaySteps())}
+function applyNativeSteps(steps){let v=Math.max(0,Number(steps)||0);document.getElementById('stepsInput').value=v;state.steps[todayKey()]=v;if(v>=state.stepTarget&&!state.stepsAwarded[todayKey()]){state.stepsAwarded[todayKey()]=true;state.xp+=30;markActive();showToast('+30 XP · цель по шагам достигнута')}else if(v<state.stepTarget&&state.stepsAwarded[todayKey()]){state.stepsAwarded[todayKey()]=false;state.xp=Math.max(0,state.xp-30)}localStorage.setItem('lifeLevel',JSON.stringify(state));render()}
+function nativeStepStatus(running,message){document.getElementById('healthStatus').textContent=message}
+function healthConnectResult(ok,message){document.getElementById('healthStatus').textContent=message;if(!ok)showToast(message)}
 function nativeNotificationPermission(granted){
  document.getElementById('waterReminderStatus').textContent=granted?'Разрешение на уведомления выдано.':'Разрешение на уведомления не выдано.';
 }
@@ -200,6 +194,6 @@ function nativeNotificationPermission(granted){
 function showHealthInfo(){alert('Автоматические шаги требуют Android-приложение с разрешением Health Connect (READ_STEPS) либо iPhone-приложение с HealthKit. В этой веб-версии нет доступа к системным датчикам. Текущие шаги можно вводить вручную.');}
 function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='life-level-progress.json';a.click();URL.revokeObjectURL(a.href)}
 function resetData(){if(confirm('Удалить весь прогресс и начать заново?')){localStorage.removeItem('lifeLevel');location.reload()}}
-if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});render();checkScheduleAlerts(true);setInterval(()=>{checkScheduleAlerts();renderWaterFast()},60000);
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});render();checkScheduleAlerts(true);setInterval(()=>{checkScheduleAlerts();renderWaterFast();if(window.AndroidBridge&&AndroidBridge.getTodaySteps){let n=AndroidBridge.getTodaySteps();if(Number(n)!==Number(state.steps[todayKey()]||0))applyNativeSteps(n)}},5000);
 </script>
 </body></html>

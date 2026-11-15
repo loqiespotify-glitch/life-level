@@ -188,7 +188,7 @@ body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 .avatar-sheet h2{text-align:center;font-size:21px!important;letter-spacing:1.4px;text-transform:uppercase;text-shadow:0 0 15px #75aaff88}
 .avatar-sheet p{text-align:center;max-width:390px;margin:6px auto 17px!important}
 .avatar-options{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important}
-.avatar-option{position:relative;display:grid;grid-template-columns:104px 1fr;grid-template-rows:auto auto auto;column-gap:10px;align-items:center;text-align:left!important;min-height:124px;padding:8px!important;overflow:hidden;border-radius:8px!important;border:1px solid #415b91!important;background:linear-gradient(135deg,#1b2b4b,#091326 80%)!important;box-shadow:inset 0 0 18px #7198ff12,0 6px 15px #0007!important}
+.avatar-option{position:relative;display:grid;grid-template-columns:104px 1fr;grid-template-rows:auto auto auto auto;column-gap:10px;align-items:center;text-align:left!important;min-height:124px;padding:8px!important;overflow:hidden;border-radius:8px!important;border:1px solid #415b91!important;background:linear-gradient(135deg,#1b2b4b,#091326 80%)!important;box-shadow:inset 0 0 18px #7198ff12,0 6px 15px #0007!important}
 .avatar-option .portrait-art{grid-column:1;grid-row:1/5;width:104px!important;height:104px!important;aspect-ratio:1;border-radius:5px!important;border:1px solid #7599d9!important;background-size:300% 200%!important;box-shadow:0 0 15px #528bff44!important;image-rendering:auto}
 .avatar-option b{grid-column:2;grid-row:2;font-size:14px!important;align-self:end}
 .avatar-option small{grid-column:2;grid-row:3;font-size:10px!important;line-height:1.25}
@@ -342,7 +342,7 @@ const avatarDefs=[
 {id:'paladin',name:'Паладин',role:'Защитник света',rank:'S',rankName:'Легенда',colors:['#f0d17b','#66502e','#fff0c2'],mark:'✧'}
 ];
 function avatarSvg(id){const pos={knight:'0% 0%',ranger:'50% 0%',berserker:'100% 0%',mage:'0% 100%',assassin:'50% 100%',shadow:'50% 100%',paladin:'100% 100%'};return `<span class="portrait-art" style="background-position:${pos[id]||pos.knight}"></span>`}
-function renderAvatar(){let id=state.profile.avatar||'knight',el=document.getElementById('heroAvatar');if(el)el.innerHTML=avatarSvg(id);let list=document.getElementById('avatarOptions');if(list)list.innerHTML=avatarDefs.map(a=>`<button class="avatar-option ${a.id===id?'selected':''}" onclick="chooseAvatar('${a.id}')" rank-${a.rank.toLowerCase()}>${avatarSvg(a.id)}<span class="hunter-rank">РАНГ ${a.rank}</span><b>${a.name}</b><small>${a.role}</small><em>${a.rankName}</em></button>`).join('')}
+function renderAvatar(){let id=state.profile.avatar||'knight',el=document.getElementById('heroAvatar');if(el)el.innerHTML=avatarSvg(id);let list=document.getElementById('avatarOptions');if(list)list.innerHTML=avatarDefs.map(a=>`<button class="avatar-option ${a.id===id?'selected':''} rank-${a.rank.toLowerCase()}" onclick="chooseAvatar('${a.id}')">${avatarSvg(a.id)}<span class="hunter-rank">РАНГ ${a.rank}</span><b>${a.name}</b><small>${a.role}</small><em>${a.rankName}</em></button>`).join('')}
 function openAvatarPicker(){renderAvatar();document.getElementById('avatarPicker').classList.add('open')}
 function closeAvatarPicker(){document.getElementById('avatarPicker').classList.remove('open')}
 function chooseAvatar(id){state.profile.avatar=id;save();renderAvatar();closeAvatarPicker();showToast('Герой выбран')}

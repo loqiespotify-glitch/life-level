@@ -181,6 +181,29 @@ body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 .achievement{min-height:180px!important}
 .achievement .shield{width:84px!important;height:96px!important}
 
+
+/* 1.0.6 hunter rank selection */
+.avatar-picker{align-items:center!important;padding:10px!important;background:radial-gradient(ellipse at 50% 38%,#1d2e61bb,transparent 55%),#02040cee!important;backdrop-filter:blur(12px)}
+.avatar-sheet{width:min(100%,650px)!important;max-height:92vh!important;padding:20px 14px 16px!important;border-radius:12px!important;border:1px solid #7e9fe9!important;background:radial-gradient(ellipse at 50% 0,#354d8b,#111b34 48%,#060b17)!important;box-shadow:0 0 0 1px #8dafff33,0 0 48px #426dff55,inset 0 0 36px #7c9cff17!important}
+.avatar-sheet h2{text-align:center;font-size:21px!important;letter-spacing:1.4px;text-transform:uppercase;text-shadow:0 0 15px #75aaff88}
+.avatar-sheet p{text-align:center;max-width:390px;margin:6px auto 17px!important}
+.avatar-options{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important}
+.avatar-option{position:relative;display:grid;grid-template-columns:104px 1fr;grid-template-rows:auto auto auto;column-gap:10px;align-items:center;text-align:left!important;min-height:124px;padding:8px!important;overflow:hidden;border-radius:8px!important;border:1px solid #415b91!important;background:linear-gradient(135deg,#1b2b4b,#091326 80%)!important;box-shadow:inset 0 0 18px #7198ff12,0 6px 15px #0007!important}
+.avatar-option .portrait-art{grid-column:1;grid-row:1/5;width:104px!important;height:104px!important;aspect-ratio:1;border-radius:5px!important;border:1px solid #7599d9!important;background-size:300% 200%!important;box-shadow:0 0 15px #528bff44!important;image-rendering:auto}
+.avatar-option b{grid-column:2;grid-row:2;font-size:14px!important;align-self:end}
+.avatar-option small{grid-column:2;grid-row:3;font-size:10px!important;line-height:1.25}
+.hunter-rank{grid-column:2;grid-row:1;justify-self:start;font-size:10px;letter-spacing:1.5px;font-weight:900;color:#b8d8ff;border:1px solid currentColor;padding:3px 7px;background:#0a1324}
+.avatar-option em{grid-column:2;grid-row:4;font-size:9px;font-style:normal;color:#9eafd0}
+.avatar-option.rank-e .hunter-rank{color:#aab8c9}.avatar-option.rank-d .hunter-rank{color:#65d6b2}.avatar-option.rank-c .hunter-rank{color:#6dbaff}.avatar-option.rank-b .hunter-rank{color:#c29aff}.avatar-option.rank-a .hunter-rank{color:#ff9bcb}.avatar-option.rank-s .hunter-rank{color:#ffd36e}
+.avatar-option.rank-e{border-color:#526178!important}.avatar-option.rank-d{border-color:#3b826f!important}.avatar-option.rank-c{border-color:#3e78b0!important}.avatar-option.rank-b{border-color:#7652a9!important}.avatar-option.rank-a{border-color:#a04e80!important}.avatar-option.rank-s{border-color:#a17b37!important;box-shadow:inset 0 0 22px #ffc85b15,0 0 12px #ffc85b22!important}
+.avatar-option.selected{outline:2px solid #e6f4ff!important;outline-offset:1px;border-color:#d6eaff!important;box-shadow:0 0 0 2px #73baff55,0 0 25px #4b9cff99!important}
+.avatar-option.rank-s.selected{box-shadow:0 0 0 2px #ffe7a455,0 0 28px #ffca5b88!important}
+.hero .avatar{background:linear-gradient(145deg,#d5e9ff,#577fe2,#b07aff)!important;box-shadow:0 0 0 2px #c6e6ff55,0 0 30px #578cff99!important}
+.achievement .shield{box-shadow:0 0 16px #6b9eff44!important}
+.achievement.epic .shield{box-shadow:0 0 18px #b35fff77!important}
+.achievement.legendary .shield{box-shadow:0 0 22px #ffbd4f99!important}
+@media(max-width:370px){.avatar-option{grid-template-columns:82px 1fr;min-height:105px}.avatar-option .portrait-art{width:82px!important;height:82px!important}}
+
 </style></head>
 <body>
 <main class="app">
@@ -311,15 +334,15 @@ function renderAnalytics(){let days=Array.from({length:7},(_,i)=>daysBack(6-i)),
 let editingId=null;
 
 const avatarDefs=[
-{id:'knight',name:'Рыцарь',role:'Страж королевства',colors:['#e5b85f','#314b68','#b4c7d8'],mark:'♜'},
-{id:'ranger',name:'Следопыт',role:'Хозяин лесных троп',colors:['#91a96a','#203d31','#d5c18b'],mark:'⌁'},
-{id:'berserker',name:'Берсерк',role:'Воин северных земель',colors:['#d48b58','#49302a','#e1d0b5'],mark:'ᛟ'},
-{id:'mage',name:'Маг',role:'Повелитель тайной силы',colors:['#c39aff','#39275e','#e5d8ff'],mark:'✦'},
-{id:'assassin',name:'Тень',role:'Клинок из темноты',colors:['#c66b63','#29232e','#d8b1a0'],mark:'☾'},
-{id:'paladin',name:'Паладин',role:'Защитник света',colors:['#f0d17b','#66502e','#fff0c2'],mark:'✧'}
+{id:'knight',name:'Рыцарь',role:'Страж королевства',rank:'E',rankName:'Новичок',colors:['#e5b85f','#314b68','#b4c7d8'],mark:'♜'},
+{id:'ranger',name:'Следопыт',role:'Хозяин лесных троп',rank:'D',rankName:'Разведчик',colors:['#91a96a','#203d31','#d5c18b'],mark:'⌁'},
+{id:'berserker',name:'Берсерк',role:'Воин северных земель',rank:'C',rankName:'Боец',colors:['#d48b58','#49302a','#e1d0b5'],mark:'ᛟ'},
+{id:'mage',name:'Маг',role:'Повелитель тайной силы',rank:'B',rankName:'Магистр',colors:['#c39aff','#39275e','#e5d8ff'],mark:'✦'},
+{id:'assassin',name:'Тень',role:'Клинок из темноты',rank:'A',rankName:'Элитный охотник',colors:['#c66b63','#29232e','#d8b1a0'],mark:'☾'},
+{id:'paladin',name:'Паладин',role:'Защитник света',rank:'S',rankName:'Легенда',colors:['#f0d17b','#66502e','#fff0c2'],mark:'✧'}
 ];
 function avatarSvg(id){const pos={knight:'0% 0%',ranger:'50% 0%',berserker:'100% 0%',mage:'0% 100%',assassin:'50% 100%',shadow:'50% 100%',paladin:'100% 100%'};return `<span class="portrait-art" style="background-position:${pos[id]||pos.knight}"></span>`}
-function renderAvatar(){let id=state.profile.avatar||'knight',el=document.getElementById('heroAvatar');if(el)el.innerHTML=avatarSvg(id);let list=document.getElementById('avatarOptions');if(list)list.innerHTML=avatarDefs.map(a=>`<button class="avatar-option ${a.id===id?'selected':''}" onclick="chooseAvatar('${a.id}')">${avatarSvg(a.id)}<b>${a.name}</b><small>${a.role}</small></button>`).join('')}
+function renderAvatar(){let id=state.profile.avatar||'knight',el=document.getElementById('heroAvatar');if(el)el.innerHTML=avatarSvg(id);let list=document.getElementById('avatarOptions');if(list)list.innerHTML=avatarDefs.map(a=>`<button class="avatar-option ${a.id===id?'selected':''}" onclick="chooseAvatar('${a.id}')" rank-${a.rank.toLowerCase()}>${avatarSvg(a.id)}<span class="hunter-rank">РАНГ ${a.rank}</span><b>${a.name}</b><small>${a.role}</small><em>${a.rankName}</em></button>`).join('')}
 function openAvatarPicker(){renderAvatar();document.getElementById('avatarPicker').classList.add('open')}
 function closeAvatarPicker(){document.getElementById('avatarPicker').classList.remove('open')}
 function chooseAvatar(id){state.profile.avatar=id;save();renderAvatar();closeAvatarPicker();showToast('Герой выбран')}

@@ -616,7 +616,7 @@ const systemRanks=[
 function systemRankForLevel(lv){let r=systemRanks[0];for(const x of systemRanks)if(lv>=x.min)r=x;return r}
 function systemAttributeTotals(){
  const map=[['СИЛА',['Физическая форма'],['💪']],['ВЫНОСЛИВОСТЬ',['Здоровье'],['🫀']],['ИНТЕЛЛЕКТ',['Интеллект'],['🧠']],['ВОЛЯ',['Дисциплина','Психология'],['◈']]];
- return map.map(([name,cats])=>{let xp=0;state.tasks.filter(t=>cats.includes(t.category)).forEach(t=>{xp+=Number(t.xp||0)*Object.values(t.awarded||{}).filter(Boolean).length});return {name,xp,level:1+Math.floor(xp/180),pct:Math.min(100,Math.round((xp%180)/180*100))}})
+ return map.map(([name,cats])=>{let xp=0;state.tasks.filter(t=>cats.includes(t.category)).forEach(t=>{xp+=Number(t.xp||0)*Object.values(t.awarded||{}).filter(Boolean).length});return {name,xp,level:1+Math.floor(xp/300),pct:Math.min(100,Math.round((xp%300)/300*100))}})
 }
 
 function systemDateKey(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}

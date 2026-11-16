@@ -34,6 +34,7 @@ jobs:
           node --check app/src/main/assets/web/system-wellness.js
           node --check app/src/main/assets/web/system-missions.js
           node --check app/src/main/assets/web/system-training.js
+          node --check app/src/main/assets/web/system-focus.js
       - name: Build preview APK
         run: gradle assembleDebug
       - name: Upload preview APK

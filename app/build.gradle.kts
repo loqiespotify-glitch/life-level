@@ -11,8 +11,8 @@ android {
         applicationId = "com.lifelevel.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 31
-        versionName = "1.5.1"
+        versionCode = 32
+        versionName = "1.6.0"
     }
 
     signingConfigs {

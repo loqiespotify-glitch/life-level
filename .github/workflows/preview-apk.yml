@@ -33,7 +33,7 @@ jobs:
           import re
           from pathlib import Path
           html = Path('app/src/main/assets/web/index.html').read_text()
-          scripts = re.findall(r'<script>([\\s\\S]*?)</script>', html)
+          scripts = re.findall(r'<script>([\s\S]*?)</script>', html)
           if len(scripts) != 1:
               raise SystemExit(f'Expected one inline application script, found {len(scripts)}')
           Path('/tmp/life-level-inline.js').write_text(scripts[0])

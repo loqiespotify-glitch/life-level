@@ -25,6 +25,18 @@ button,input,select{font:inherit}button{cursor:pointer}.app{max-width:760px;marg
 
 .waterfast{display:grid;gap:14px;margin:18px 0}.wfcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px}.wfhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.wfhead h3{margin:0;font-size:16px}.wfmuted{color:var(--muted);font-size:12px}.wfrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}.wfrow .field{flex:1;min-width:95px}.wfbtn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:10px 13px}.wfbtn.primary{background:var(--green);color:#102019;border:0;font-weight:800}.wfbar{height:9px;background:#293747;border-radius:20px;overflow:hidden;margin:10px 0}.wfbar i{display:block;height:100%;background:var(--blue);width:0}.wfstatus{font-size:20px;font-weight:800;margin:5px 0}.wfgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.wfgrid label{font-size:12px;color:var(--muted)}.wfgrid input{width:100%;margin-top:5px}.wfnote{font-size:11px;color:var(--muted);line-height:1.45;margin-top:10px}.gearbtn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:6px 10px;font-size:17px;line-height:1}.settings{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}.settings summary{list-style:none;display:flex;justify-content:flex-end;cursor:pointer;color:var(--muted);font-size:12px}.settings summary::-webkit-details-marker{display:none}.settings[open] summary{margin-bottom:10px}.compact-step{padding:10px 12px;margin-bottom:12px}.step-extra{display:none}.day{cursor:pointer}.day.future{opacity:.4}.day.selected{outline:2px solid var(--gold);background:#39402f;color:#fff}.stage{cursor:pointer}.stage summary{font-weight:750;list-style:none}.stage summary::-webkit-details-marker{display:none}.stage summary:after{content:'＋';float:right;color:var(--green)}.stage[open] summary:after{content:'−'}.detailpanel{background:#101a24;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:9px;font-size:12px;line-height:1.55;color:#c4d1dc}.levelclick,.metricclick{cursor:pointer}.historylist{display:grid;gap:7px}.historyitem{background:var(--panel2);padding:10px;border-radius:10px;font-size:12px}.category-total{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px;margin-top:6px}
 
+/* Training module */
+.training-ex{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:13px;margin-bottom:9px}
+.training-ex.done{border-color:#397a5d}
+.training-ex-head{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.training-ex-title{font-weight:750}
+.training-ex-meta{font-size:11px;color:var(--muted);margin-top:4px}
+.training-sets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}
+.training-sets label{font-size:10px;color:var(--muted)}
+.training-sets input{width:100%;margin-top:4px;background:#0e151e;border:1px solid var(--line);border-radius:9px;color:var(--text);padding:9px}
+.training-actions{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.training-actions button{flex:1}
+.training-next{font-size:11px;color:var(--green);margin-top:8px;line-height:1.4}
 /* 0.9.5 progression systems */
 .nav{overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav button{flex:1 0 48px;min-width:48px;padding:7px 5px}
 .task{position:relative;overflow:hidden}.task:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);opacity:.8}.task.done:before{background:var(--green)}.taskmain{position:relative}.taskprogress{height:4px;background:#0b1118;border-radius:8px;margin-top:8px;overflow:hidden}.taskprogress i{display:block;height:100%;background:linear-gradient(90deg,#42bd8e,#9af0c9)}.taskbadge{display:inline-flex;font-size:9px;border:1px solid var(--line);border-radius:20px;padding:2px 6px;color:var(--muted);margin-top:5px}
@@ -284,6 +296,27 @@ body.system-rank-s{--sys-accent:#ffd778;--sys-glow:#b87922}
 <div class="notice">Повторения можно добавлять частями: например, +10, +10, +10 отжиманий. XP за миссию начисляется один раз при достижении цели. Дополнительные повторения сохраняются в статистике.</div>
 </section>
 
+<section class="page" id="training">
+<div class="section-head"><h2>Тренировочный зал</h2><span class="pill">OFFLINE MODE</span></div>
+<div class="wfcard">
+ <div class="wfhead"><h3>⚔️ План на сегодня</h3><span class="wfmuted" id="trainingDate"></span></div>
+ <div class="wfstatus" id="trainingProgress">0 / 4 упражнений</div>
+ <div class="wfbar"><i id="trainingBar"></i></div>
+ <div class="wfnote">Записывай фактические повторения и подходы. Прогрессия предлагается только после выполненной тренировки. Боль, головокружение или необычная одышка означают остановку, а не повод добивать полоску.</div>
+</div>
+<div class="section-head"><h2>Твой комплекс</h2><button class="btn ghost" onclick="resetWorkoutDay()">Сбросить день</button></div>
+<div id="workoutList"></div>
+<div class="wfcard">
+ <h3 style="margin:0 0 10px">＋ Добавить упражнение</h3>
+ <input class="field" id="exerciseName" placeholder="Например, тяга резинки">
+ <div class="wfgrid" style="margin-top:8px">
+  <label>Подходы<input class="field" id="exerciseSets" type="number" min="1" max="10" value="3"></label>
+  <label>Повторения / секунды<input class="field" id="exerciseReps" type="number" min="1" max="1000" value="10"></label>
+ </div>
+ <div class="wfrow"><select class="field" id="exerciseUnit"><option value="раз">Повторения</option><option value="сек">Секунды</option><option value="мин">Минуты</option></select><button class="wfbtn primary" onclick="addWorkoutExercise()">Добавить</button></div>
+</div>
+<div class="section-head"><h2>История нагрузки</h2></div><div id="workoutHistory" class="historylist"></div>
+</section>
 <section class="page" id="program"><div class="section-head"><h2>Программа 100 дней</h2><span class="muted" id="programProgress">0%</span></div><div class="bar"><i id="programBar" style="width:0%"></i></div><p class="muted" style="font-size:12px">Зелёные ячейки — дни, когда была выполнена хотя бы одна миссия.</p><div class="daygrid" id="daygrid"></div><div class="detailpanel" id="dayDetails" style="margin-top:12px">Нажми на прошедший день, чтобы посмотреть историю.</div><div class="section-head"><h2>Этапы развития</h2></div><details class="skill stage"><summary>Дни 1–21 · Фундамент</summary><div class="detailpanel"><b>Задача:</b> создать устойчивый ритм без перегрузки.<br>• Выбрать несколько простых миссий и выполнять их регулярно.<br>• Освоить базовую технику упражнений.<br>• Настроить воду, сон и удобное расписание.<br>• Важнее повторяемость, а не рекорды.</div></details><details class="skill stage"><summary>Дни 22–60 · Развитие</summary><div class="detailpanel"><b>Задача:</b> постепенно повышать нагрузку и самостоятельность.<br>• Увеличивать повторения или время небольшими шагами.<br>• Отслеживать результаты по каждой миссии.<br>• Чередовать нагрузку и восстановление.<br>• Снижать нагрузку при накоплении усталости.</div></details><details class="skill stage"><summary>Дни 61–100 · Закрепление</summary><div class="detailpanel"><b>Задача:</b> превратить привычки в устойчивую систему.<br>• Закрепить удобный недельный режим.<br>• Сравнить стартовые и текущие показатели.<br>• Выбрать новые реалистичные цели.<br>• Сохранить полезные привычки после 100-го дня.</div></details></section>
 
 <section class="page" id="skills"><div class="section-head"><h2>Мои реальные навыки</h2><span class="muted">Прогресс человека</span></div><div class="section-head"><h2>Паутина развития</h2><span class="muted">Твои характеристики</span></div><div class="radarwrap"><svg id="radar" class="radar" viewBox="0 0 340 310" role="img" aria-label="Диаграмма развития навыков"></svg><div class="muted" style="font-size:11px">Чем больше XP ты набираешь в направлении, тем дальше растёт соответствующая ось.</div></div><div class="section-head"><h2>Уровни навыков</h2></div><div id="skillsList"></div><div class="section-head"><h2>Общие достижения</h2></div><div id="categoryTotals"></div>
@@ -302,6 +335,7 @@ body.system-rank-s{--sys-accent:#ffd778;--sys-glow:#b87922}
 <div class="avatar-picker" id="avatarPicker" onclick="if(event.target===this)closeAvatarPicker()"><div class="avatar-sheet"><h2>Выбери своего героя</h2><p>Персонаж будет отображаться на главной. Выбор можно изменить позже.</p><div class="avatar-options" id="avatarOptions"></div><button class="btn secondary" style="width:100%;margin-top:13px" onclick="closeAvatarPicker()">Закрыть</button></div></div>
 <nav class="nav">
 <button type="button" class="active" data-page="today" onclick="showPage('today')"><span class="ico">☀️</span>Сегодня</button>
+<button type="button" data-page="training" onclick="showPage('training')"><span class="ico">⚔️</span>Тренировки</button>
 <button type="button" data-page="program" onclick="showPage('program')"><span class="ico">📅</span>100 дней</button>
 <button type="button" data-page="skills" onclick="showPage('skills')"><span class="ico">🏅</span>Развитие</button>
 <button type="button" data-page="profile" onclick="showPage('profile')"><span class="ico">👤</span>Профиль</button>
@@ -331,7 +365,12 @@ const fresh=()=>({xp:0,created:todayKey(),tasks:defaultTasks.map((t,i)=>({...t,i
 let state;try{state=JSON.parse(localStorage.getItem('lifeLevel')||'null')}catch(e){state=null}state=state||fresh();
 if(!state.water)state.water={goal:2500,every:2,logs:{}};if(!state.water.logs)state.water.logs={};if(!state.fasting)state.fasting={eatStart:'16:00',eatEnd:'00:00',lastState:null};if(!state.profile)state.profile=fresh().profile;if(!state.profile.fitness)state.profile.fitness='beginner';if(!Array.isArray(state.profile.focus))state.profile.focus=['weight','strength'];if(!state.steps)state.steps={};if(!state.stepsAwarded)state.stepsAwarded={};if(!state.stepTarget)state.stepTarget=7000;if(!state.recoveryDays)state.recoveryDays={};
 state.tasks=(state.tasks||[]).map(t=>({...t,type:t.type||'check',target:t.target||1,unit:t.unit||'раз',ladder:!!t.ladder,ladderIncrement:t.ladderIncrement||2,logs:t.logs||{},awarded:t.awarded||{},done:t.done||{},systemStartDate:t.systemStartDate||todayKey()}));
-if(!state.systemSettledDays)state.systemSettledDays=[];
+if(!state.workouts)state.workouts={exercises:[
+{id:1,name:'Отжимания',sets:3,reps:8,unit:'раз',active:true},
+{id:2,name:'Тяга резинки к поясу',sets:3,reps:12,unit:'раз',active:true},
+{id:3,name:'Приседания',sets:3,reps:12,unit:'раз',active:true},
+{id:4,name:'Планка',sets:3,reps:20,unit:'сек',active:true}
+],logs:{}};if(!Array.isArray(state.workouts.exercises))state.workouts.exercises=[];if(!state.workouts.logs)state.workouts.logs={};if(!state.systemSettledDays)state.systemSettledDays=[];
 
 if(!state.achievementUnlocks)state.achievementUnlocks={};if(!state.challengeClaims)state.challengeClaims={};
 const achievementDefs=[
@@ -408,6 +447,48 @@ function updateTaskType(){document.getElementById('counterFields').style.display
 function toggleLadderFields(){document.getElementById('ladderFields').style.display=document.getElementById('taskLadder').checked?'block':'none'}
 function saveTask(){let title=document.getElementById('taskTitle').value.trim();if(!title){showToast('Введи название миссии');return}let obj={title,category:document.getElementById('taskCategory').value,type:document.getElementById('taskType').value,target:Math.max(1,Number(document.getElementById('taskTarget').value)||1),unit:document.getElementById('taskUnit').value.trim()||'раз',xp:Number(document.getElementById('taskXP').value),ladder:document.getElementById('taskType').value==='counter'&&document.getElementById('taskLadder').checked,ladderIncrement:Number(document.getElementById('taskIncrement').value)||2,logs:{},done:{},awarded:{}};if(editingId){let old=state.tasks.find(x=>x.id===editingId);obj.id=old.id;obj.systemStartDate=old.systemStartDate||todayKey();obj.logs=old.logs;obj.done=old.done;obj.awarded=old.awarded;obj.adaptiveProgression=!!old.adaptiveProgression;state.tasks=state.tasks.map(x=>x.id===editingId?obj:x)}else{obj.id=state.nextId++;obj.systemStartDate=todayKey();state.tasks.push(obj)}closeTask();save();showToast('Миссия сохранена')}
 function deleteTask(id){if(!confirm('Удалить эту миссию? История её выполнения останется в общем XP.'))return;state.tasks=state.tasks.filter(t=>t.id!==id);save()}
+function workoutKey(){return todayKey()}
+function workoutLog(){let k=workoutKey();if(!state.workouts.logs[k])state.workouts.logs[k]={};return state.workouts.logs[k]}
+function renderWorkout(){
+ const list=document.getElementById('workoutList');if(!list)return;
+ const log=workoutLog(),items=state.workouts.exercises.filter(x=>x.active!==false);
+ let completed=items.filter(x=>log[x.id]?.done).length;
+ document.getElementById('trainingDate').textContent=workoutKey();
+ document.getElementById('trainingProgress').textContent=completed+' / '+items.length+' упражнений';
+ document.getElementById('trainingBar').style.width=(items.length?Math.round(completed/items.length*100):0)+'%';
+ list.innerHTML=items.map(x=>{
+  let rec=log[x.id]||{},vals=Array.from({length:x.sets},(_,i)=>Number(rec.values?.[i]??x.reps));
+  let prev=Object.entries(state.workouts.logs).filter(([k,v])=>k<workoutKey()&&v[x.id]?.done).sort((a,b)=>b[0].localeCompare(a[0]))[0];
+  let next=prev?Math.max(x.reps,Number(prev[1][x.id].best||x.reps)+1):x.reps;
+  return '<div class="training-ex '+(rec.done?'done':'')+'"><div class="training-ex-head"><div><div class="training-ex-title">'+esc(x.name)+'</div><div class="training-ex-meta">'+x.sets+' подхода · цель '+x.reps+' '+esc(x.unit)+' · лучший прошлый результат '+(prev?prev[1][x.id].best+' '+esc(x.unit):'пока нет')+'</div></div><button class="iconbtn" onclick="removeWorkoutExercise('+x.id+')">×</button></div><div class="training-sets">'+vals.map((v,i)=>'<label>Подход '+(i+1)+'<input type="number" min="0" max="1000" value="'+v+'" id="w_'+x.id+'_'+i+'"></label>').join('')+'</div><div class="training-actions"><button class="wfbtn primary" onclick="saveWorkoutExercise('+x.id+')">'+(rec.done?'Обновить результат':'Завершить упражнение')+'</button><button class="wfbtn" onclick="applyWorkoutProgression('+x.id+')">Следующая цель: '+next+'</button></div><div class="training-next">'+(rec.done?'✓ Результат записан.':'Сначала выполни все подходы в комфортном темпе. Не увеличивай нагрузку при ухудшении техники.')+'</div></div>';
+ }).join('')||'<div class="empty">Добавь упражнения, чтобы собрать комплекс.</div>';
+ let hist=Object.entries(state.workouts.logs).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,7);
+ document.getElementById('workoutHistory').innerHTML=hist.map(([k,v])=>{let n=Object.values(v).filter(x=>x.done).length;return '<div class="historyitem"><b>'+k+'</b><span class="muted"> · '+n+' упражнений завершено</span></div>'}).join('')||'<div class="muted">История появится после первой тренировки.</div>';
+}
+function addWorkoutExercise(){
+ let name=document.getElementById('exerciseName').value.trim(),sets=Math.max(1,Math.min(10,Number(document.getElementById('exerciseSets').value)||3)),reps=Math.max(1,Math.min(1000,Number(document.getElementById('exerciseReps').value)||10)),unit=document.getElementById('exerciseUnit').value;
+ if(!name){showToast('Введи название упражнения');return}
+ let id=Math.max(0,...state.workouts.exercises.map(x=>Number(x.id)||0))+1;
+ state.workouts.exercises.push({id,name,sets,reps,unit,active:true});document.getElementById('exerciseName').value='';save();showToast('Упражнение добавлено');
+}
+function removeWorkoutExercise(id){if(!confirm('Убрать упражнение из комплекса? История останется.'))return;let x=state.workouts.exercises.find(x=>x.id===id);if(x)x.active=false;save()}
+function saveWorkoutExercise(id){
+ let x=state.workouts.exercises.find(x=>x.id===id);if(!x)return;let vals=[];
+ for(let i=0;i<x.sets;i++){let el=document.getElementById('w_'+id+'_'+i),v=Number(el?.value);if(!Number.isFinite(v)||v<0){showToast('Проверь значения подходов');return}vals.push(Math.floor(v))}
+ if(vals.every(v=>v===0)){showToast('Запиши фактическую нагрузку');return}
+ let log=workoutLog(),was=!!log[id]?.done,best=Math.max(...vals);
+ log[id]={done:true,values:vals,best,unit:x.unit,updated:new Date().toISOString()};
+ if(!was){state.xp+=10;state.totalWorkoutXP=(state.totalWorkoutXP||0)+10}
+ save();showToast(was?'Результат обновлён':'Упражнение завершено · +10 XP');
+}
+function applyWorkoutProgression(id){
+ let x=state.workouts.exercises.find(x=>x.id===id);if(!x)return;
+ let prev=Object.entries(state.workouts.logs).filter(([k,v])=>k<workoutKey()&&v[id]?.done).sort((a,b)=>b[0].localeCompare(a[0]))[0];
+ if(!prev){showToast('Сначала запиши первую тренировку');return}
+ let best=Number(prev[1][id].best)||x.reps;
+ x.reps=Math.max(x.reps,best+1);save();showToast('Цель увеличена на 1 '+x.unit);
+}
+function resetWorkoutDay(){if(!confirm('Сбросить отметки тренировки за сегодня? XP за уже завершённые упражнения не возвращается.'))return;delete state.workouts.logs[workoutKey()];save()}
 function showPage(id){const page=document.getElementById(id);if(!page||!page.classList.contains('page'))return;document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));if(id==='profile')fillProfile();if(id==='assistant')renderAssistant();window.scrollTo({top:0,behavior:'instant'})}
 window.showPage=showPage;
 function doneOn(t,date){return t.type==='counter'?Number(t.logs?.[date]||0)>=targetFor(t,date):!!t.done?.[date]}
@@ -416,7 +497,7 @@ function markRecoveryDay(){let k=todayKey();if(state.recoveryDays[k])return;stat
 function undoRecoveryDay(){let k=todayKey();if(!state.recoveryDays[k])return;delete state.recoveryDays[k];save();showToast('Отметка восстановления отменена')}
 function renderRecovery(){let box=document.getElementById('recoveryBox');if(!box)return;let days=recoveryStats(),done=!!state.recoveryDays[todayKey()];box.innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><b>🧘 Восстановление</b><span class="pill">${days.length}/7 тренировочных дней</span></div><div class="taskmeta" style="margin:8px 0">${days.length>=3?'За последние 7 дней уже '+days.length+' активных дней с физическими миссиями. Запланируй отдых, если чувствуешь усталость.':'Отдых помогает восстановиться. Не нужно выполнять силовые миссии ежедневно.'}</div>${done?'<div class="muted">Сегодня день восстановления отмечен ✓</div><button class="btn secondary small" style="margin-top:8px" onclick="undoRecoveryDay()">Отменить отметку</button>':'<button class="btn secondary small" onclick="markRecoveryDay()">Отметить день восстановления</button>'}`}
 function toggleStepSettings(){let e=document.getElementById('stepSettings');e.style.display=e.style.display==='block'?'none':'block'}
-function render(){renderSystem();renderRecovery();let d=dayNo(),done=state.tasks.filter(isDone).length,total=state.tasks.length;document.getElementById('dateLabel').textContent=`ДЕНЬ ${d} / 100`;let lv=level(),base=xpForLevel(lv),next=xpForLevel(lv+1),within=state.xp-base,needed=next-base,pct=Math.min(100,Math.floor(within/needed*100));document.getElementById('level').textContent=lv;document.getElementById('xp').textContent=state.xp;document.getElementById('xpbar').style.width=pct+'%';document.getElementById('nextxp').textContent=`${within} / ${needed} XP до следующего уровня`;document.getElementById('percent').textContent=pct+'%';document.getElementById('doneCount').textContent=done+'/'+total;document.getElementById('streak').textContent=state.streak+' 🔥';document.getElementById('daysLeft').textContent=100-d;document.getElementById('hello').textContent=state.profile.name?`Привет, ${state.profile.name}. Продолжай прокачку.`:'Прокачивай реальную жизнь';renderAvatar();
+function render(){renderSystem();renderRecovery();renderWorkout();let d=dayNo(),done=state.tasks.filter(isDone).length,total=state.tasks.length;document.getElementById('dateLabel').textContent=`ДЕНЬ ${d} / 100`;let lv=level(),base=xpForLevel(lv),next=xpForLevel(lv+1),within=state.xp-base,needed=next-base,pct=Math.min(100,Math.floor(within/needed*100));document.getElementById('level').textContent=lv;document.getElementById('xp').textContent=state.xp;document.getElementById('xpbar').style.width=pct+'%';document.getElementById('nextxp').textContent=`${within} / ${needed} XP до следующего уровня`;document.getElementById('percent').textContent=pct+'%';document.getElementById('doneCount').textContent=done+'/'+total;document.getElementById('streak').textContent=state.streak+' 🔥';document.getElementById('daysLeft').textContent=100-d;document.getElementById('hello').textContent=state.profile.name?`Привет, ${state.profile.name}. Продолжай прокачку.`:'Прокачивай реальную жизнь';renderAvatar();
 document.getElementById('tasks').innerHTML=state.tasks.map(t=>{let val=logOf(t),target=targetFor(t),pct=Math.min(100,Math.round(val/target*100));return `<div class="task ${isDone(t)?'done':''}"><div class="check" onclick="toggleTask(${t.id})">${isDone(t)?'✓':''}</div><div class="taskmain"><div class="taskname">${esc(t.title)}</div><div class="taskmeta">${esc(t.category)} · цель ${t.type==='counter'?target+' '+esc(t.unit):'выполнить'}${t.adaptiveProgression?' · рост +'+t.ladderIncrement+' '+esc(t.unit)+' за 3 успешных дня (до +5 шагов)'+adaptiveHint(t):t.ladder?' · лесенка +'+t.ladderIncrement+' за успешный день':''}</div><div class="taskprogress"><i style="width:${t.type==='counter'?pct:(isDone(t)?100:0)}%"></i></div><span class="taskbadge">${isDone(t)?'Завершено':t.type==='counter'?pct+'% · в процессе':'Ожидает выполнения'}</span>${t.type==='counter'?`<div class="counter"><strong>${val} / ${target} ${esc(t.unit)}</strong><button onclick="addCount(${t.id},1)">+1</button><button onclick="addCount(${t.id},5)">+5</button><button onclick="addCount(${t.id},10)">+10</button><input type="number" min="0" value="${val}" onchange="setCount(${t.id},this.value)" aria-label="Ввести количество"></div>`:''}</div><div class="taskactions"><span class="reward">+${t.xp} XP</span><button class="iconbtn" onclick="openTask(${t.id})" aria-label="Редактировать">✎</button><button class="iconbtn" onclick="deleteTask(${t.id})" aria-label="Удалить">×</button></div></div>`}).join('')||'<div class="empty">Пока нет миссий. Добавь первую.</div>';
 let steps=Number(state.steps[todayKey()]||0),sp=Math.min(100,Math.round(steps/state.stepTarget*100));document.getElementById('stepsInput').value=steps||'';document.getElementById('stepsValue').textContent=`${steps.toLocaleString('ru-RU')} из ${state.stepTarget.toLocaleString('ru-RU')} шагов`;document.getElementById('stepsBar').style.width=sp+'%';document.getElementById('stepPct').textContent=sp+'%';
 let p=Math.round(state.activeDays.length/100*100);document.getElementById('programProgress').textContent=p+'%';document.getElementById('programBar').style.width=p+'%';document.getElementById('daygrid').innerHTML=Array.from({length:100},(_,i)=>{let date=new Date(state.created+'T00:00:00');date.setDate(date.getDate()+i);let k=[date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-'),future=k>todayKey();return `<button type="button" class="day ${state.activeDays.includes(k)?'past':''} ${i+1===d?'current':''} ${future?'future':''}" ${future?'disabled':''} onclick="showDayDetails(\'${k}\',${i+1})" title="${k}">${i+1}</button>`}).join('');

@@ -10,7 +10,7 @@ const packs=[
 {title:'Восстановление',icon:'✦',items:[['Дыхательная практика','Психология',10,'counter',5,'минут'],['Тихий отдых без телефона','Психология',10,'counter',10,'минут'],['Записать итоги дня','Психология',10,'check',1,'раз']]}
 ];
 function todayKey(){let d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function rankForXP(xp){return xp>=80?'S':xp>=50?'A':xp>=30?'B':xp>=20?'C':xp>=15?'D':'E'}
+function rankForXP(xp){return xp>=50?'B':xp>=30?'C':xp>=20?'D':'E'}
 function addItem(t){state.tasks=Array.isArray(state.tasks)?state.tasks:[];if(state.tasks.some(x=>x.title===t[0]))return false;let id=Math.max(Number(state.nextId)||1,Math.max(0,...state.tasks.map(x=>Number(x.id)||0))+1),xp=Number(t[2])||10;state.tasks.push({id,title:t[0],category:t[1],xp,type:t[3],target:t[4],unit:t[5],rank:rankForXP(xp),priority:'normal',logs:{},awarded:{},done:{},ladder:false,ladderIncrement:2,systemStartDate:todayKey()});state.nextId=id+1;return true}
 function render(){let root=$('sx-library');if(!root)return;root.innerHTML=packs.map((p,i)=>'<section class="sx-lib-pack"><h4>'+p.icon+' '+p.title+'</h4>'+p.items.map((t,j)=>'<div class="sx-lib-item"><div><b>'+esc(t[0])+'</b><small>'+t[1]+' · '+t[2]+' XP'+(t[3]==='counter'?' · цель '+t[4]+' '+t[5]:'')+'</small></div><button onclick="sxAddMission('+i+','+j+')">Добавить</button></div>').join('')+'</section>').join('')+'<p class="sx-lib-note">Миссии добавляются в общий список. Повторное добавление одинаковой активной миссии блокируется.</p>'}
 window.sxAddMission=(i,j)=>{let t=packs[i]?.items[j];if(!t)return;if(!addItem(t)){showToast('Такая миссия уже есть');return}save();render();showToast('Миссия добавлена: '+t[0])};

@@ -29,6 +29,16 @@ jobs:
           gradle-version: "8.11.1"
       - name: Validate offline JavaScript
         run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          html = Path('app/src/main/assets/web/index.html').read_text()
+          scripts = re.findall(r'<script>([\\s\\S]*?)</script>', html)
+          if len(scripts) != 1:
+              raise SystemExit(f'Expected one inline application script, found {len(scripts)}')
+          Path('/tmp/life-level-inline.js').write_text(scripts[0])
+          PY
+          node --check /tmp/life-level-inline.js
           node --check app/src/main/assets/web/system-expansion.js
           node --check app/src/main/assets/web/system-modules.js
           node --check app/src/main/assets/web/system-wellness.js

@@ -5,8 +5,8 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const slots = ['weapon','armor','accessory','aura','title','background'];
-  const slotNames = {weapon:'Оружие',armor:'Броня',accessory:'Аксессуар',aura:'Аура',title:'Титул',background:'Фон'};
+  const slots = ['weapon','armor','crown','accessory','aura','title','background'];
+  const slotNames = {weapon:'Оружие',armor:'Броня',crown:'Корона',accessory:'Аксессуар',aura:'Аура',title:'Титул',background:'Фон',scroll:'Свиток'};
   const tiers = {
     BRONZE:{label:'Бронзовый',color:'#b98b62',chance:[72,23,5]},
     SILVER:{label:'Серебряный',color:'#b8d3e8',chance:[42,43,15]},
@@ -14,26 +14,29 @@
   };
   const loot = {
     common:[
-      ['weapon','Клинок начинающего охотника','Оружие, выкованное для первых испытаний'],
-      ['armor','Кожаный нагрудник','Лёгкая защита для ежедневного пути'],
+      ['scroll','Свиток пробуждения','Короткое напоминание о выбранном пути'],
+      ['title','Железная воля','Титул за последовательность'],
       ['accessory','Печать упорства','Знак завершённых испытаний'],
-      ['title','Не сдающийся','Титул за последовательность']
+      ['accessory','Боевой шрам','Косметический знак пройденного пути']
     ],
     rare:[
       ['weapon','Стальной резонатор','Оружие с холодным голубым свечением'],
       ['armor','Панцирь сумрачного стража','Усиленная экипировка охотника'],
-      ['accessory','Кольцо концентрации','Символ собранности и внимания'],
-      ['aura','Синяя аура','Эффект пробуждённой энергии'],
-      ['background','Зал испытаний','Тема интерфейса охотника']
+      ['background','Зал испытаний','Тема интерфейса охотника'],
+      ['title','Покоритель теней','Титул за устойчивый прогресс']
     ],
     epic:[
       ['weapon','Клинок безмолвной звезды','Редкий клинок высшего ранга'],
       ['armor','Доспех глубокой тени','Комплект для тех, кто прошёл долгий путь'],
-      ['accessory','Реликвия монарха','Знак особого достижения'],
+      ['crown','Корона восходящего','Знак высшего испытания'],
       ['aura','Аура монарха','Редкий визуальный эффект'],
-      ['title','Наследник системы','Титул высшего испытания'],
-      ['background','Тронный зал','Тема интерфейса высшего ранга']
+      ['title','Наследник системы','Титул высшего ранга']
     ]
+  };
+  const lootTables = {
+    BRONZE:[['common',60],['rare',30],['epic',10]],
+    SILVER:[['common',25],['rare',55],['epic',20]],
+    GOLD:[['common',10],['rare',40],['epic',50]]
   };
   function store(){
     state.system=state.system||{};
@@ -57,15 +60,23 @@
     r.seenLevel=current;persist();toast('Уровень повышен. Получено сундуков: '+(current-previous));
   }
   function roll(tier){
-    const pool=tiers[tier]||tiers.BRONZE,n=Math.random()*100;
-    const rarity=n<pool.chance[0]?'common':n<pool.chance[0]+pool.chance[1]?'rare':'epic';
+    const table=lootTables[tier]||lootTables.BRONZE;
+    const n=Math.random()*100;
+    let total=0,rarity='common';
+    for(const entry of table){total+=entry[1];if(n<total){rarity=entry[0];break}}
     const list=loot[rarity],chosen=list[Math.floor(Math.random()*list.length)];
     return {type:chosen[0],name:chosen[1],description:chosen[2],rarity,id:'item-'+Date.now()+'-'+Math.random().toString(36).slice(2,9),obtainedAt:new Date().toISOString()};
   }
   function openChest(id){
     const r=store(),chest=r.chests.find(x=>x.id===id);
     if(!chest||chest.opened)return;
-    const item=roll(chest.tier);chest.opened=true;chest.itemId=item.id;r.inventory.unshift(item);persist();render();toast('Сундук открыт: '+item.name);
+    const item=roll(chest.tier);
+    const duplicate=r.inventory.find(x=>x.type===item.type&&x.name===item.name);
+    if(duplicate){
+      item.name += ' · копия';
+      item.description += '. Повторная награда сохранена отдельно.';
+    }
+    chest.opened=true;chest.itemId=item.id;r.inventory.unshift(item);persist();render();toast('Сундук открыт: '+item.name);
   }
   function equip(id){
     const r=store(),item=r.inventory.find(x=>x.id===id);

@@ -330,7 +330,8 @@ const defaultTasks=[
 const fresh=()=>({xp:0,created:todayKey(),tasks:defaultTasks.map((t,i)=>({...t,id:i+1,logs:{},awarded:{}})),nextId:6,activeDays:[],streak:0,best:0,lastActive:null,steps:{},stepsAwarded:{},stepTarget:7000,water:{goal:2500,every:2,logs:{},nativeEnabled:true},fasting:{eatStart:'16:00',eatEnd:'00:00',lastState:null,nativeEnabled:true},profile:{name:'',height:'',weight:'',targetWeight:'',age:'',goal:'Похудеть',other:'',fitness:'beginner',focus:['weight','strength']},recoveryDays:{}});
 let state;try{state=JSON.parse(localStorage.getItem('lifeLevel')||'null')}catch(e){state=null}state=state||fresh();
 if(!state.water)state.water={goal:2500,every:2,logs:{}};if(!state.water.logs)state.water.logs={};if(!state.fasting)state.fasting={eatStart:'16:00',eatEnd:'00:00',lastState:null};if(!state.profile)state.profile=fresh().profile;if(!state.profile.fitness)state.profile.fitness='beginner';if(!Array.isArray(state.profile.focus))state.profile.focus=['weight','strength'];if(!state.steps)state.steps={};if(!state.stepsAwarded)state.stepsAwarded={};if(!state.stepTarget)state.stepTarget=7000;if(!state.recoveryDays)state.recoveryDays={};
-state.tasks=(state.tasks||[]).map(t=>({...t,type:t.type||'check',target:t.target||1,unit:t.unit||'раз',ladder:!!t.ladder,ladderIncrement:t.ladderIncrement||2,logs:t.logs||{},awarded:t.awarded||{},done:t.done||{}}));
+state.tasks=(state.tasks||[]).map(t=>({...t,type:t.type||'check',target:t.target||1,unit:t.unit||'раз',ladder:!!t.ladder,ladderIncrement:t.ladderIncrement||2,logs:t.logs||{},awarded:t.awarded||{},done:t.done||{},systemStartDate:t.systemStartDate||todayKey()}));
+if(!state.systemSettledDays)state.systemSettledDays=[];
 
 if(!state.achievementUnlocks)state.achievementUnlocks={};if(!state.challengeClaims)state.challengeClaims={};
 const achievementDefs=[
@@ -517,7 +518,7 @@ function assistantAdvice(){let d=assistantData(),p=state.profile,items=[];if(!d.
 function renderAssistant(){let d=assistantData(),advice=assistantAdvice();document.getElementById('assistantBrief').innerHTML='<div class="coach-hero"><div class="eyebrow">ЕЖЕНЕДЕЛЬНЫЙ РАЗБОР</div><div class="coach-score">'+d.active+' <small>/ 7 активных дней</small></div><div class="coach-line">'+d.total+' миссий выполнено за последние 7 дней · серия '+d.streak+' дней</div></div><div class="coach-list">'+advice.map((x,i)=>'<div class="coach-tip"><b>'+String(i+1).padStart(2,'0')+'</b><span>'+x+'</span></div>').join('')+'</div>' ;let plan=[];if(d.active<4)plan.push('Оставь 2–3 ключевые миссии и выполни их минимум в 4 дня.');else plan.push('Сохрани текущую частоту и добавь только одну небольшую цель.');if(d.avgSteps<5000)plan.push('Добавь короткую прогулку 10–15 минут в удобное время.');else plan.push('Сохраняй привычный уровень шагов без резкого увеличения.');plan.push('Выдели минимум один облегчённый день для восстановления.');document.getElementById('assistantPlan').innerHTML=plan.map(x=>'<div class="skill coach-tip"><span>'+x+'</span></div>').join('')}
 function askAssistant(){let q=(document.getElementById('assistantQuestion').value||'').trim().toLowerCase(),d=assistantData(),answer='';if(!q){showToast('Напиши вопрос');return}if(/прогресс|стою|останов|результат/.test(q))answer='За последние 7 дней: '+d.total+' миссий и '+d.active+' активных дней. Сначала проверь регулярность и сложность целей. Если миссии часто остаются незавершёнными, снизь объём на 20–30% на неделю, затем оцени результат.';else if(/устал|отдых|восстанов|перегруз/.test(q))answer='Если чувствуешь усталость, боль или ухудшение сна, не пытайся закрыть план любой ценой. Сделай лёгкий день: спокойная прогулка или отдых, без повышения повторений.';else if(/вес|похуд|калори/.test(q)){let p=state.profile;answer=p.weight&&p.targetWeight?'Текущий вес в профиле: '+p.weight+' кг, цель: '+p.targetWeight+' кг. Смотри среднюю динамику за 2–4 недели. Для оценки питания нужны записи о еде и примерные порции, которых приложение пока не собирает.':'Заполни текущий и целевой вес в профиле. Приложение пока не ведёт дневник питания, поэтому не будет выдумывать калории.'}else if(/шаг/.test(q))answer='Среднее число шагов за последние 7 дней: '+d.avgSteps.toLocaleString('ru-RU')+'. Увеличивай нагрузку постепенно и ориентируйся на самочувствие.';else if(/вода|пить/.test(q))answer='Цель по воде выполнена '+d.waterDays+' из 7 дней. Распределяй воду в течение дня и учитывай жажду, погоду и нагрузку. Не нужно пить сверх потребности ради полоски.';else if(/мисси|задан/.test(q))answer='Сейчас в плане '+d.missionCount+' миссий. За неделю выполнено '+d.total+'. Лучше 3–5 устойчивых заданий, чем длинный список, который превращается в наказание.';else answer='Могу оценить регулярность, нагрузку, шаги, воду, вес и выполнение миссий. Уточни вопрос в одном из этих направлений. Я анализирую только данные, которые реально сохранены в приложении.';let box=document.getElementById('assistantAnswer');box.style.display='block';box.textContent=answer}
 
-if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});syncAchievements();render();checkScheduleAlerts(true);setInterval(()=>{checkScheduleAlerts();renderWaterFast();if(window.AndroidBridge&&AndroidBridge.getTodaySteps){let n=AndroidBridge.getTodaySteps();if(Number(n)!==Number(state.steps[todayKey()]||0))applyNativeSteps(n)}},5000);
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});syncAchievements();settleSystemDay();render();checkScheduleAlerts(true);setInterval(()=>{checkScheduleAlerts();renderWaterFast();if(window.AndroidBridge&&AndroidBridge.getTodaySteps){let n=AndroidBridge.getTodaySteps();if(Number(n)!==Number(state.steps[todayKey()]||0))applyNativeSteps(n)}},5000);
 
 /* SYSTEM integration: independent implementation inspired by the MIT-licensed THE SYSTEM progression model.
    Ascension Fitness is all-rights-reserved; only general product ideas are used, not its code or artwork. */
@@ -534,6 +535,29 @@ function systemAttributeTotals(){
  const map=[['СИЛА',['Физическая форма'],['💪']],['ВЫНОСЛИВОСТЬ',['Здоровье'],['🫀']],['ИНТЕЛЛЕКТ',['Интеллект'],['🧠']],['ВОЛЯ',['Дисциплина','Психология'],['◈']]];
  return map.map(([name,cats])=>{let xp=0;state.tasks.filter(t=>cats.includes(t.category)).forEach(t=>{xp+=Number(t.xp||0)*Object.values(t.awarded||{}).filter(Boolean).length});return {name,xp,level:1+Math.floor(xp/180),pct:Math.min(100,Math.round((xp%180)/180*100))}})
 }
+
+function systemDateKey(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function systemDoneOn(t,key){return t.type==='counter'?Number(t.logs?.[key]||0)>=targetFor(t,key):!!t.done?.[key]}
+function settleSystemDay(){
+ const today=todayKey(),y=new Date();y.setDate(y.getDate()-1);const yesterday=systemDateKey(y);
+ if(!state.systemLastSettlement){state.systemLastSettlement=yesterday;localStorage.setItem('lifeLevel',JSON.stringify(state));return}
+ let cursor=new Date(state.systemLastSettlement+'T00:00:00');cursor.setDate(cursor.getDate()+1);let changed=false,totalPenalty=0;
+ while(systemDateKey(cursor)<=yesterday){
+  const key=systemDateKey(cursor);
+  if(!state.systemSettledDays.includes(key)){
+   if(!state.recoveryDays?.[key]){
+    const missed=state.tasks.filter(t=>t.systemStartDate<=key&&!systemDoneOn(t,key));
+    const penalty=Math.min(25,missed.length*5);
+    if(penalty){state.xp=Math.max(0,state.xp-penalty);totalPenalty+=penalty}
+   }
+   state.systemSettledDays.push(key);changed=true;
+  }
+  cursor.setDate(cursor.getDate()+1);
+ }
+ state.systemLastSettlement=yesterday;
+ if(changed){localStorage.setItem('lifeLevel',JSON.stringify(state));if(totalPenalty)state.systemLastPenalty=totalPenalty}
+}
+
 function renderSystem(){
  const lv=level(),rank=systemRankForLevel(lv),next=systemRanks.find(x=>x.min>lv),base=xpForLevel(lv),threshold=xpForLevel(lv+1),pct=Math.max(0,Math.min(100,Math.round((state.xp-base)/Math.max(1,threshold-base)*100)));
  document.body.classList.remove('system-rank-e','system-rank-d','system-rank-c','system-rank-b','system-rank-a','system-rank-s');document.body.classList.add('system-rank-'+rank.rank.toLowerCase());
@@ -541,7 +565,7 @@ function renderSystem(){
  put('sysRank',rank.rank);put('sysRankName',rank.name);put('sysRankDesc',rank.desc);put('sysLevel','УРОВЕНЬ '+lv);put('sysXpText',state.xp.toLocaleString('ru-RU')+' XP');put('sysNextRank',next?'До ранга '+next.rank+': '+Math.max(0,next.min-lv)+' ур.':'Максимальный ранг достигнут');
  const bar=document.getElementById('sysXpBar');if(bar)bar.style.width=pct+'%';
  const attrs=systemAttributeTotals(),box=document.getElementById('sysAttributes');if(box)box.innerHTML=attrs.map(a=>'<div class="sys-attribute"><b>'+a.level+'</b><span>'+a.name+'</span><i style="--v:'+a.pct+'%"></i></div>').join('');
- const done=state.tasks.filter(isDone).length,total=state.tasks.length;put('sysMessage',total?'Сегодня закрыто миссий: '+done+' из '+total+'. '+rank.message:rank.message);
+ const done=state.tasks.filter(isDone).length,total=state.tasks.length;put('sysMessage',total?'Сегодня закрыто миссий: '+done+' из '+total+'. '+rank.message:rank.message);if(state.lastPenalty){put('sysMessage','Система удержала '+state.lastPenalty+' XP за незакрытые вчерашние миссии. День восстановления защищает от штрафа.');state.lastPenalty=0;}
  const core=document.getElementById('systemCore');if(core&&state.systemLastRank&&state.systemLastRank!==rank.rank){core.classList.remove('sys-rankup');void core.offsetWidth;core.classList.add('sys-rankup');showToast('РАНГ ПОВЫШЕН: '+rank.rank+' · '+rank.name)}state.systemLastRank=rank.rank;
 }
 

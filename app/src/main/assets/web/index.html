@@ -618,7 +618,8 @@ function systemAttributeTotals(){
 }
 
 function systemDateKey(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
-function systemDoneOn(t,key){return t.type==='counter'?Number(t.logs?.[key]||0)>=targetFor(t,key):!!t.done?.[key]}\nfunction systemScheduledOn(t,key){const schedule=state.system?.schedule?.[t.id];if(!Array.isArray(schedule))return true;const d=new Date(key+'T12:00:00');return schedule.includes((d.getDay()+6)%7)}
+function systemDoneOn(t,key){return t.type==='counter'?Number(t.logs?.[key]||0)>=targetFor(t,key):!!t.done?.[key]}
+function systemScheduledOn(t,key){const schedule=state.system?.schedule?.[t.id];if(!Array.isArray(schedule))return true;const d=new Date(key+'T12:00:00');return schedule.includes((d.getDay()+6)%7)}
 function settleSystemDay(){
  const today=todayKey(),y=new Date();y.setDate(y.getDate()-1);const yesterday=systemDateKey(y);
  if(!state.systemLastSettlement){state.systemLastSettlement=yesterday;localStorage.setItem('lifeLevel',JSON.stringify(state));return}

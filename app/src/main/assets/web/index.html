@@ -204,6 +204,38 @@ body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 .achievement.legendary .shield{box-shadow:0 0 22px #ffbd4f99!important}
 @media(max-width:370px){.avatar-option{grid-template-columns:82px 1fr;min-height:105px}.avatar-option .portrait-art{width:82px!important;height:82px!important}}
 
+
+/* SYSTEM INTEGRATION · rank aura, stat core, quest feedback */
+:root{--sys-accent:#72c7ff;--sys-glow:#247dbb}
+body.system-rank-e{--sys-accent:#9aa9b8;--sys-glow:#536779}
+body.system-rank-d{--sys-accent:#6fc7d8;--sys-glow:#246c88}
+body.system-rank-c{--sys-accent:#7ca8ff;--sys-glow:#345bb5}
+body.system-rank-b{--sys-accent:#b38cff;--sys-glow:#6842b0}
+body.system-rank-a{--sys-accent:#e3a7ff;--sys-glow:#8739b4}
+body.system-rank-s{--sys-accent:#ffd778;--sys-glow:#b87922}
+.system-core{position:relative;overflow:hidden;margin:0 0 15px;padding:16px;border:1px solid color-mix(in srgb,var(--sys-accent) 55%,transparent);border-radius:19px;background:radial-gradient(ellipse at 85% 0%,color-mix(in srgb,var(--sys-glow) 35%,transparent),transparent 55%),linear-gradient(145deg,#111d2a,#101721 72%,#171c2b);box-shadow:0 0 28px color-mix(in srgb,var(--sys-glow) 18%,transparent),inset 0 1px #ffffff12}
+.system-core:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 25%,#ffffff08 48%,transparent 68%);transform:translateX(-120%);animation:sysSweep 7s ease-in-out infinite}
+@keyframes sysSweep{0%,70%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.sys-head{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.sys-kicker{font-size:9px;letter-spacing:2.2px;color:var(--sys-accent);font-weight:900}
+.sys-rank{font-size:25px;line-height:1;font-weight:950;color:var(--sys-accent);text-shadow:0 0 18px color-mix(in srgb,var(--sys-accent) 70%,transparent)}
+.sys-title{font-size:14px;font-weight:850;margin-top:4px}
+.sys-sub{font-size:10px;color:#9baec1;margin-top:4px}
+.sys-level{font-size:11px;color:var(--sys-accent);border:1px solid color-mix(in srgb,var(--sys-accent) 45%,transparent);padding:7px 10px;border-radius:10px;background:#07111c99;white-space:nowrap}
+.sys-xp{height:7px;border-radius:20px;background:#07111c;margin:14px 0 7px;overflow:hidden;position:relative;z-index:1}
+.sys-xp i{display:block;height:100%;background:linear-gradient(90deg,var(--sys-glow),var(--sys-accent));box-shadow:0 0 12px var(--sys-accent);border-radius:20px;transition:width .5s}
+.sys-foot{display:flex;justify-content:space-between;font-size:10px;color:#9baec1;position:relative;z-index:1}
+.sys-attributes{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:14px;position:relative;z-index:1}
+.sys-attribute{min-width:0;padding:9px 7px;border:1px solid #ffffff14;border-radius:11px;background:#ffffff08}
+.sys-attribute b{display:block;font-size:15px;color:#f0f5fb}
+.sys-attribute span{display:block;font-size:9px;color:#9baec1;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sys-attribute i{display:block;height:3px;background:#07111c;border-radius:5px;margin-top:7px;overflow:hidden}
+.sys-attribute i:after{content:"";display:block;width:var(--v);height:100%;background:var(--sys-accent);box-shadow:0 0 8px var(--sys-accent)}
+.sys-message{font-size:11px;line-height:1.45;color:#c1d0df;margin-top:12px;padding-top:10px;border-top:1px solid #ffffff14;position:relative;z-index:1}
+.sys-rankup{animation:sysRankUp .8s ease}
+@keyframes sysRankUp{0%{filter:brightness(1)}35%{filter:brightness(2.4);transform:scale(1.015)}100%{filter:brightness(1);transform:scale(1)}}
+@media(max-width:370px){.sys-attributes{gap:5px}.sys-attribute{padding:8px 5px}.sys-attribute b{font-size:13px}.sys-attribute span{font-size:8px}}
+
 </style></head>
 <body>
 <main class="app">
@@ -242,6 +274,12 @@ body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;opa
  </section>
 </div>
 <div class="skill" id="recoveryBox" style="margin-bottom:12px"></div>
+<section class="system-core" id="systemCore" aria-label="Система развития">
+ <div class="sys-head"><div><div class="sys-kicker">LIFE LEVEL // SYSTEM ONLINE</div><div class="sys-title" id="sysRankName">Пробуждение охотника</div><div class="sys-sub" id="sysRankDesc">Каждая выполненная миссия меняет твои характеристики</div></div><div style="text-align:right"><div class="sys-rank" id="sysRank">E</div><div class="sys-level" id="sysLevel">УРОВЕНЬ 1</div></div></div>
+ <div class="sys-xp"><i id="sysXpBar" style="width:0%"></i></div><div class="sys-foot"><span id="sysXpText">0 XP</span><span id="sysNextRank">До ранга D: 5 ур.</span></div>
+ <div class="sys-attributes" id="sysAttributes"></div>
+ <div class="sys-message" id="sysMessage">Система активирована. Начни с одной миссии и закрепи результат.</div>
+</section>
 <div id="tasks"></div>
 <div class="notice">Повторения можно добавлять частями: например, +10, +10, +10 отжиманий. XP за миссию начисляется один раз при достижении цели. Дополнительные повторения сохраняются в статистике.</div>
 </section>
@@ -377,7 +415,7 @@ function markRecoveryDay(){let k=todayKey();if(state.recoveryDays[k])return;stat
 function undoRecoveryDay(){let k=todayKey();if(!state.recoveryDays[k])return;delete state.recoveryDays[k];save();showToast('Отметка восстановления отменена')}
 function renderRecovery(){let box=document.getElementById('recoveryBox');if(!box)return;let days=recoveryStats(),done=!!state.recoveryDays[todayKey()];box.innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><b>🧘 Восстановление</b><span class="pill">${days.length}/7 тренировочных дней</span></div><div class="taskmeta" style="margin:8px 0">${days.length>=3?'За последние 7 дней уже '+days.length+' активных дней с физическими миссиями. Запланируй отдых, если чувствуешь усталость.':'Отдых помогает восстановиться. Не нужно выполнять силовые миссии ежедневно.'}</div>${done?'<div class="muted">Сегодня день восстановления отмечен ✓</div><button class="btn secondary small" style="margin-top:8px" onclick="undoRecoveryDay()">Отменить отметку</button>':'<button class="btn secondary small" onclick="markRecoveryDay()">Отметить день восстановления</button>'}`}
 function toggleStepSettings(){let e=document.getElementById('stepSettings');e.style.display=e.style.display==='block'?'none':'block'}
-function render(){renderRecovery();let d=dayNo(),done=state.tasks.filter(isDone).length,total=state.tasks.length;document.getElementById('dateLabel').textContent=`ДЕНЬ ${d} / 100`;let lv=level(),base=xpForLevel(lv),next=xpForLevel(lv+1),within=state.xp-base,needed=next-base,pct=Math.min(100,Math.floor(within/needed*100));document.getElementById('level').textContent=lv;document.getElementById('xp').textContent=state.xp;document.getElementById('xpbar').style.width=pct+'%';document.getElementById('nextxp').textContent=`${within} / ${needed} XP до следующего уровня`;document.getElementById('percent').textContent=pct+'%';document.getElementById('doneCount').textContent=done+'/'+total;document.getElementById('streak').textContent=state.streak+' 🔥';document.getElementById('daysLeft').textContent=100-d;document.getElementById('hello').textContent=state.profile.name?`Привет, ${state.profile.name}. Продолжай прокачку.`:'Прокачивай реальную жизнь';renderAvatar();
+function render(){renderSystem();renderRecovery();let d=dayNo(),done=state.tasks.filter(isDone).length,total=state.tasks.length;document.getElementById('dateLabel').textContent=`ДЕНЬ ${d} / 100`;let lv=level(),base=xpForLevel(lv),next=xpForLevel(lv+1),within=state.xp-base,needed=next-base,pct=Math.min(100,Math.floor(within/needed*100));document.getElementById('level').textContent=lv;document.getElementById('xp').textContent=state.xp;document.getElementById('xpbar').style.width=pct+'%';document.getElementById('nextxp').textContent=`${within} / ${needed} XP до следующего уровня`;document.getElementById('percent').textContent=pct+'%';document.getElementById('doneCount').textContent=done+'/'+total;document.getElementById('streak').textContent=state.streak+' 🔥';document.getElementById('daysLeft').textContent=100-d;document.getElementById('hello').textContent=state.profile.name?`Привет, ${state.profile.name}. Продолжай прокачку.`:'Прокачивай реальную жизнь';renderAvatar();
 document.getElementById('tasks').innerHTML=state.tasks.map(t=>{let val=logOf(t),target=targetFor(t),pct=Math.min(100,Math.round(val/target*100));return `<div class="task ${isDone(t)?'done':''}"><div class="check" onclick="toggleTask(${t.id})">${isDone(t)?'✓':''}</div><div class="taskmain"><div class="taskname">${esc(t.title)}</div><div class="taskmeta">${esc(t.category)} · цель ${t.type==='counter'?target+' '+esc(t.unit):'выполнить'}${t.adaptiveProgression?' · рост +'+t.ladderIncrement+' '+esc(t.unit)+' за 3 успешных дня (до +5 шагов)'+adaptiveHint(t):t.ladder?' · лесенка +'+t.ladderIncrement+' за успешный день':''}</div><div class="taskprogress"><i style="width:${t.type==='counter'?pct:(isDone(t)?100:0)}%"></i></div><span class="taskbadge">${isDone(t)?'Завершено':t.type==='counter'?pct+'% · в процессе':'Ожидает выполнения'}</span>${t.type==='counter'?`<div class="counter"><strong>${val} / ${target} ${esc(t.unit)}</strong><button onclick="addCount(${t.id},1)">+1</button><button onclick="addCount(${t.id},5)">+5</button><button onclick="addCount(${t.id},10)">+10</button><input type="number" min="0" value="${val}" onchange="setCount(${t.id},this.value)" aria-label="Ввести количество"></div>`:''}</div><div class="taskactions"><span class="reward">+${t.xp} XP</span><button class="iconbtn" onclick="openTask(${t.id})" aria-label="Редактировать">✎</button><button class="iconbtn" onclick="deleteTask(${t.id})" aria-label="Удалить">×</button></div></div>`}).join('')||'<div class="empty">Пока нет миссий. Добавь первую.</div>';
 let steps=Number(state.steps[todayKey()]||0),sp=Math.min(100,Math.round(steps/state.stepTarget*100));document.getElementById('stepsInput').value=steps||'';document.getElementById('stepsValue').textContent=`${steps.toLocaleString('ru-RU')} из ${state.stepTarget.toLocaleString('ru-RU')} шагов`;document.getElementById('stepsBar').style.width=sp+'%';document.getElementById('stepPct').textContent=sp+'%';
 let p=Math.round(state.activeDays.length/100*100);document.getElementById('programProgress').textContent=p+'%';document.getElementById('programBar').style.width=p+'%';document.getElementById('daygrid').innerHTML=Array.from({length:100},(_,i)=>{let date=new Date(state.created+'T00:00:00');date.setDate(date.getDate()+i);let k=[date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-'),future=k>todayKey();return `<button type="button" class="day ${state.activeDays.includes(k)?'past':''} ${i+1===d?'current':''} ${future?'future':''}" ${future?'disabled':''} onclick="showDayDetails(\'${k}\',${i+1})" title="${k}">${i+1}</button>`}).join('');
@@ -480,5 +518,32 @@ function renderAssistant(){let d=assistantData(),advice=assistantAdvice();docume
 function askAssistant(){let q=(document.getElementById('assistantQuestion').value||'').trim().toLowerCase(),d=assistantData(),answer='';if(!q){showToast('Напиши вопрос');return}if(/прогресс|стою|останов|результат/.test(q))answer='За последние 7 дней: '+d.total+' миссий и '+d.active+' активных дней. Сначала проверь регулярность и сложность целей. Если миссии часто остаются незавершёнными, снизь объём на 20–30% на неделю, затем оцени результат.';else if(/устал|отдых|восстанов|перегруз/.test(q))answer='Если чувствуешь усталость, боль или ухудшение сна, не пытайся закрыть план любой ценой. Сделай лёгкий день: спокойная прогулка или отдых, без повышения повторений.';else if(/вес|похуд|калори/.test(q)){let p=state.profile;answer=p.weight&&p.targetWeight?'Текущий вес в профиле: '+p.weight+' кг, цель: '+p.targetWeight+' кг. Смотри среднюю динамику за 2–4 недели. Для оценки питания нужны записи о еде и примерные порции, которых приложение пока не собирает.':'Заполни текущий и целевой вес в профиле. Приложение пока не ведёт дневник питания, поэтому не будет выдумывать калории.'}else if(/шаг/.test(q))answer='Среднее число шагов за последние 7 дней: '+d.avgSteps.toLocaleString('ru-RU')+'. Увеличивай нагрузку постепенно и ориентируйся на самочувствие.';else if(/вода|пить/.test(q))answer='Цель по воде выполнена '+d.waterDays+' из 7 дней. Распределяй воду в течение дня и учитывай жажду, погоду и нагрузку. Не нужно пить сверх потребности ради полоски.';else if(/мисси|задан/.test(q))answer='Сейчас в плане '+d.missionCount+' миссий. За неделю выполнено '+d.total+'. Лучше 3–5 устойчивых заданий, чем длинный список, который превращается в наказание.';else answer='Могу оценить регулярность, нагрузку, шаги, воду, вес и выполнение миссий. Уточни вопрос в одном из этих направлений. Я анализирую только данные, которые реально сохранены в приложении.';let box=document.getElementById('assistantAnswer');box.style.display='block';box.textContent=answer}
 
 if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});syncAchievements();render();checkScheduleAlerts(true);setInterval(()=>{checkScheduleAlerts();renderWaterFast();if(window.AndroidBridge&&AndroidBridge.getTodaySteps){let n=AndroidBridge.getTodaySteps();if(Number(n)!==Number(state.steps[todayKey()]||0))applyNativeSteps(n)}},5000);
+
+/* SYSTEM integration: independent implementation inspired by the MIT-licensed THE SYSTEM progression model.
+   Ascension Fitness is all-rights-reserved; only general product ideas are used, not its code or artwork. */
+const systemRanks=[
+ {rank:'E',min:1,name:'Пробуждение',desc:'Первый шаг за пределы привычного',message:'Не гонись за уровнем. Сначала докажи системе, что можешь быть последовательным.'},
+ {rank:'D',min:5,name:'Ученик',desc:'Фундамент дисциплины заложен',message:'Базовые привычки начинают становиться частью твоего режима.'},
+ {rank:'C',min:12,name:'Боец',desc:'Ты уже выдерживаешь нагрузку',message:'Пора укреплять слабые стороны, не забывая о восстановлении.'},
+ {rank:'B',min:22,name:'Элитный охотник',desc:'Стабильность превращается в силу',message:'Система видит регулярность. Поднимай сложность постепенно.'},
+ {rank:'A',min:36,name:'Мастер',desc:'Высокий уровень самоконтроля',message:'Теперь важны качество выполнения, сон и управление нагрузкой.'},
+ {rank:'S',min:55,name:'Монарх',desc:'Высшая ступень текущей системы',message:'Ранг S не означает бесконечную нагрузку. Сохраняй устойчивость.'}
+];
+function systemRankForLevel(lv){let r=systemRanks[0];for(const x of systemRanks)if(lv>=x.min)r=x;return r}
+function systemAttributeTotals(){
+ const map=[['СИЛА',['Физическая форма'],['💪']],['ВЫНОСЛИВОСТЬ',['Здоровье'],['🫀']],['ИНТЕЛЛЕКТ',['Интеллект'],['🧠']],['ВОЛЯ',['Дисциплина','Психология'],['◈']]];
+ return map.map(([name,cats])=>{let xp=0;state.tasks.filter(t=>cats.includes(t.category)).forEach(t=>{xp+=Number(t.xp||0)*Object.values(t.awarded||{}).filter(Boolean).length});return {name,xp,level:1+Math.floor(xp/180),pct:Math.min(100,Math.round((xp%180)/180*100))}})
+}
+function renderSystem(){
+ const lv=level(),rank=systemRankForLevel(lv),next=systemRanks.find(x=>x.min>lv),base=xpForLevel(lv),threshold=xpForLevel(lv+1),pct=Math.max(0,Math.min(100,Math.round((state.xp-base)/Math.max(1,threshold-base)*100)));
+ document.body.classList.remove('system-rank-e','system-rank-d','system-rank-c','system-rank-b','system-rank-a','system-rank-s');document.body.classList.add('system-rank-'+rank.rank.toLowerCase());
+ const put=(id,v)=>{let e=document.getElementById(id);if(e)e.textContent=v};
+ put('sysRank',rank.rank);put('sysRankName',rank.name);put('sysRankDesc',rank.desc);put('sysLevel','УРОВЕНЬ '+lv);put('sysXpText',state.xp.toLocaleString('ru-RU')+' XP');put('sysNextRank',next?'До ранга '+next.rank+': '+Math.max(0,next.min-lv)+' ур.':'Максимальный ранг достигнут');
+ const bar=document.getElementById('sysXpBar');if(bar)bar.style.width=pct+'%';
+ const attrs=systemAttributeTotals(),box=document.getElementById('sysAttributes');if(box)box.innerHTML=attrs.map(a=>'<div class="sys-attribute"><b>'+a.level+'</b><span>'+a.name+'</span><i style="--v:'+a.pct+'%"></i></div>').join('');
+ const done=state.tasks.filter(isDone).length,total=state.tasks.length;put('sysMessage',total?'Сегодня закрыто миссий: '+done+' из '+total+'. '+rank.message:rank.message);
+ const core=document.getElementById('systemCore');if(core&&state.systemLastRank&&state.systemLastRank!==rank.rank){core.classList.remove('sys-rankup');void core.offsetWidth;core.classList.add('sys-rankup');showToast('РАНГ ПОВЫШЕН: '+rank.rank+' · '+rank.name)}state.systemLastRank=rank.rank;
+}
+
 </script>
 </body></html>

@@ -476,9 +476,9 @@ function saveWorkoutExercise(id){
  let x=state.workouts.exercises.find(x=>x.id===id);if(!x)return;let vals=[];
  for(let i=0;i<x.sets;i++){let el=document.getElementById('w_'+id+'_'+i),v=Number(el?.value);if(!Number.isFinite(v)||v<0){showToast('Проверь значения подходов');return}vals.push(Math.floor(v))}
  if(vals.every(v=>v===0)){showToast('Запиши фактическую нагрузку');return}
- let log=workoutLog(),was=!!log[id]?.done,best=Math.max(...vals);
- log[id]={done:true,values:vals,best,unit:x.unit,updated:new Date().toISOString()};
- if(!was){state.xp+=10;state.totalWorkoutXP=(state.totalWorkoutXP||0)+10}
+ let log=workoutLog(),was=!!log[id]?.done,awarded=!!log[id]?.awarded,best=Math.max(...vals);
+ log[id]={done:true,awarded:awarded||!was,values:vals,best,unit:x.unit,updated:new Date().toISOString()};
+ if(!awarded&&!was){state.xp+=10;state.totalWorkoutXP=(state.totalWorkoutXP||0)+10}
  save();showToast(was?'Результат обновлён':'Упражнение завершено · +10 XP');
 }
 function applyWorkoutProgression(id){
@@ -488,7 +488,7 @@ function applyWorkoutProgression(id){
  let best=Number(prev[1][id].best)||x.reps;
  x.reps=Math.max(x.reps,best+1);save();showToast('Цель увеличена на 1 '+x.unit);
 }
-function resetWorkoutDay(){if(!confirm('Сбросить отметки тренировки за сегодня? XP за уже завершённые упражнения не возвращается.'))return;delete state.workouts.logs[workoutKey()];save()}
+function resetWorkoutDay(){if(!confirm('Сбросить отметки тренировки за сегодня? Уже начисленный XP повторно получить нельзя.'))return;let log=workoutLog();Object.keys(log).forEach(id=>{log[id].done=false});save()}
 function showPage(id){const page=document.getElementById(id);if(!page||!page.classList.contains('page'))return;document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));if(id==='profile')fillProfile();if(id==='assistant')renderAssistant();window.scrollTo({top:0,behavior:'instant'})}
 window.showPage=showPage;
 function doneOn(t,date){return t.type==='counter'?Number(t.logs?.[date]||0)>=targetFor(t,date):!!t.done?.[date]}

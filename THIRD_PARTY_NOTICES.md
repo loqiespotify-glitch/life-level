@@ -21,6 +21,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
+## Solo-Leveling Self-Improvement App
+
+The supplied archive's README states that the project is licensed under MIT, but the archive contains no standalone LICENSE file. No source code, artwork, assets, or UI components from this project have been copied into LIFE LEVEL. Only broad gameplay concepts (quest-linked progression, equipment slots, and item rarity) are independently implemented pending verification of the upstream license.
+
 ## Ascension Fitness
 Repository: https://github.com/KVRYSV/ascension.fitness.app
 

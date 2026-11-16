@@ -1,10 +1,10 @@
 /* LIFE LEVEL SYSTEM expansion: original offline modules */
 (function(){
 'use strict';
-const $=id=>document.getElementById(id), today=()=>new Date().toLocaleDateString('en-CA');
+const $=id=>document.getElementById(id), today=()=>{let d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
 const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function data(){state.system=state.system||{};let s=state.system;s.title=s.title||'Новичок';s.class=s.class||'Охотник';s.focusMinutes=s.focusMinutes||0;s.journal=s.journal||{};s.schedule=s.schedule||{};s.skills=s.skills||{};s.badges=s.badges||{};return s}
-function days(n){return Array.from({length:n},(_,i)=>{let d=new Date();d.setDate(d.getDate()-n+1+i);return d.toLocaleDateString('en-CA')})}
+function days(n){return Array.from({length:n},(_,i)=>{let d=new Date();d.setDate(d.getDate()-n+1+i);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')})}
 function countDone(){return (state.tasks||[]).reduce((a,t)=>a+Object.values(t.awarded||{}).filter(Boolean).length,0)}
 function xpCat(c){return (state.tasks||[]).filter(t=>t.category===c).reduce((a,t)=>a+Number(t.xp||0)*Object.values(t.awarded||{}).filter(Boolean).length,0)}
 const defs=[['СИЛА','Физическая форма','💪'],['ВЫНОСЛИВОСТЬ','Здоровье','🫀'],['ИНТЕЛЛЕКТ','Интеллект','🧠'],['ВОЛЯ','Дисциплина','◈'],['ДУХ','Психология','✦']];
